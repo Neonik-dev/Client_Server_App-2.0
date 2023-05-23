@@ -19,8 +19,8 @@ public class MusicBand implements Serializable, Comparable<MusicBand> {
     MusicGenre genre; //Поле не может быть null
     Studio studio; //Поле не может быть null
 
-    public Optional<Long> getNumberOfParticipants() {
-        return Optional.of(numberOfParticipants);
+    public Optional<Long> getSafeNumberOfParticipants() {
+        return Optional.ofNullable(numberOfParticipants);
     }
 
     @Override

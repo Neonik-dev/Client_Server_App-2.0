@@ -14,8 +14,8 @@ public class Commands {
             BaseCommand helpCommand = new HelpCommand();
             COMMANDS.put(helpCommand.getCommandName(), helpCommand);
 
-//            BaseCommand clearCommand = new ClearCommand();
-//            COMMANDS.put(clearCommand.getName(), clearCommand);
+            BaseCommand clearCommand = new ClearCommand();
+            COMMANDS.put(clearCommand.getCommandName(), clearCommand);
 
             BaseCommand historyCommand = new HistoryCommand();
             COMMANDS.put(historyCommand.getCommandName(), historyCommand);
@@ -44,9 +44,9 @@ public class Commands {
                     printUniqueNumberOfParticipantsCommand
             );
 
-//            BaseCommand countLessThanNumberOfParticipantsCommand = new CountLessThanNumberOfParticipantsCommand();
-//            COMMANDS.put(countLessThanNumberOfParticipantsCommand.getName(), countLessThanNumberOfParticipantsCommand);
-//
+            BaseCommand countLessThanNumberOfParticipantsCommand = new CountLessThanNumberOfParticipantsCommand();
+            COMMANDS.put(countLessThanNumberOfParticipantsCommand.getCommandName(), countLessThanNumberOfParticipantsCommand);
+
 //            BaseCommand saveCommand = new SaveCommand();
 //            COMMANDS.put(saveCommand.getName(), saveCommand);
 //

@@ -31,7 +31,7 @@ public class MusicBandCollection {
         return dateCreated.toString();
     }
 
-    public void clear() {
+    public static void clear() {
         musicBandCollection.clear();
         ALL_ID.clear();
     }
@@ -118,10 +118,18 @@ public class MusicBandCollection {
     public static void getUniqueNumberOfParticipants(Printer printer) {
         Set<Long> uniqueParticipants = musicBandCollection.stream()
                 .filter(
-                        musicBand -> musicBand.getNumberOfParticipants().isPresent()
+                        musicBand -> musicBand.getSafeNumberOfParticipants().isPresent()
                 ).map(
-                        musicBand -> musicBand.getNumberOfParticipants().get()
+                        musicBand -> musicBand.getSafeNumberOfParticipants().get()
                 ).collect(Collectors.toSet());
         printer.println(uniqueParticipants.toString());
+    }
+
+    public static long countNumberOfParticipants(long number) {
+        return musicBandCollection.stream()
+                .filter(
+                        musicBand -> (musicBand.getSafeNumberOfParticipants().isPresent()) &&
+                                (musicBand.getSafeNumberOfParticipants().get() < number)
+                ).count();
     }
 }

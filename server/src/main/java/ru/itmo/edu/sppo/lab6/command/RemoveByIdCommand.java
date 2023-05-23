@@ -5,11 +5,13 @@ import ru.itmo.edu.sppo.lab6.dto.ClientResponse;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.storage.MusicBandCollection;
 import ru.itmo.edu.sppo.lab6.utils.CheckID;
+import ru.itmo.edu.sppo.lab6.utils.CheckNumberOfArguments;
 import ru.itmo.edu.sppo.lab6.utils.Printer;
 
 public class RemoveByIdCommand implements BaseCommand {
     private static final String NAME = "remove_by_id";
     private static final String SUCCESS = "Удаление элемента с (id)=(%d) прошло успешно";
+    private static final String TEXT_CHECK_ARGUMENTS = "Необходимо ввести один числовой аргумент -> id";
 
     @Override
     public String getCommandName() {
@@ -33,9 +35,7 @@ public class RemoveByIdCommand implements BaseCommand {
 
     @Override
     public void checkArgs(String[] args) throws IncorrectDataEntryExceptions {
-        if (args.length != 1) {
-            throw new IncorrectDataEntryExceptions("Необходимо ввести один числовой аргумент -> id");
-        }
+        CheckNumberOfArguments.check(args, 1, TEXT_CHECK_ARGUMENTS);
         CheckID.checkExistsID(args[0]);
     }
 }

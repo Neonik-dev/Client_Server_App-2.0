@@ -7,12 +7,14 @@ import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 import ru.itmo.edu.sppo.lab6.storage.GetServerCommands;
 import ru.itmo.edu.sppo.lab6.storage.MusicBandCollection;
 import ru.itmo.edu.sppo.lab6.utils.CheckID;
+import ru.itmo.edu.sppo.lab6.utils.CheckNumberOfArguments;
 import ru.itmo.edu.sppo.lab6.utils.Printer;
 
 import java.util.Map;
 
 public class UpdateCommand implements BaseCommand {
     private static final String SUCCESS = "Элемент коллекции успешно обновился";
+    private static final String TEXT_CHECK_ARGUMENTS = "Необходимо ввести один числовой аргумент -> id";
     private static final String NAME = "update";
     private static final boolean TRANSMIT_OBJECT = true;
     private static final boolean FIRST_GET_COMMAND = true;
@@ -55,9 +57,7 @@ public class UpdateCommand implements BaseCommand {
 
     @Override
     public void checkArgs(String[] args) throws IncorrectDataEntryExceptions {
-        if (args.length != 1) {
-            throw new IncorrectDataEntryExceptions("Необходимо ввести один числовой аргумент -> id");
-        }
+        CheckNumberOfArguments.check(args, 1, TEXT_CHECK_ARGUMENTS);
         CheckID.checkExistsID(args[0]);
     }
 }
