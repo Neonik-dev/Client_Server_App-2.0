@@ -9,17 +9,18 @@ import ru.itmo.edu.sppo.lab6.utils.Printer;
 
 @Slf4j
 public class AddCommand implements BaseCommand {
+    private static final String SUCCESS_ADD = "Элемент успешно добавился в коллекцию";
     private static final boolean NEED_TRANSFER_ELEMENT = true;
-    private final String name = "add";
+    private static final String NAME = "add";
 
     @Override
     public String getCommandName() {
-        return name;
+        return NAME;
     }
 
     @Override
     public String getCommandDescription() {
-        return name + " -> добавляет новый элемент в коллекцию";
+        return NAME + " -> добавляет новый элемент в коллекцию";
     }
 
     @Override
@@ -33,6 +34,7 @@ public class AddCommand implements BaseCommand {
         MusicBandCollection.add(request.getMusicBand());
 
         log.info(MusicBandCollection.getMusicBandLinkedList().toString());
+        printer.println(SUCCESS_ADD);
         return new ClientResponse(printer.toString());
     }
 

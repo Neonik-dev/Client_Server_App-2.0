@@ -6,6 +6,7 @@ import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryInFileExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 import ru.itmo.edu.sppo.lab6.utils.MusicBandValidation;
+import ru.itmo.edu.sppo.lab6.utils.Printer;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -61,5 +62,12 @@ public class MusicBandCollection {
         } catch (UnexpectedCommandExceptions e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void show(Printer printer) {
+        Collections.sort(musicBandCollection);
+        musicBandCollection.forEach(
+                (musicBand) -> printer.println(musicBand.toString())
+        );
     }
 }

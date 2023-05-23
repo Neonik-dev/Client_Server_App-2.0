@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @Data
-public class MusicBand implements Serializable {
+public class MusicBand implements Serializable, Comparable<MusicBand> {
     int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     String name; //Поле не может быть null, Строка не может быть пустой
     Coordinates coordinates; //Поле не может быть null
@@ -17,4 +17,9 @@ public class MusicBand implements Serializable {
     Date establishmentDate; //Поле может быть null
     MusicGenre genre; //Поле не может быть null
     Studio studio; //Поле не может быть null
+
+    @Override
+    public int compareTo(MusicBand item) {
+        return name.compareTo(item.name);
+    }
 }

@@ -8,16 +8,16 @@ import ru.itmo.edu.sppo.lab6.utils.Printer;
 
 public class HistoryCommand implements BaseCommand {
     private static final boolean NEED_TRANSFER_ELEMENT = false;
-    private final String name = "history";
+    private static final String NAME = "history";
 
     @Override
     public String getCommandName() {
-        return name;
+        return NAME;
     }
 
     @Override
     public String getCommandDescription() {
-        return name + " -> выводит последние" + HistoryStorage.STORAGE_SIZE + "команд (без их аргументов)";
+        return NAME + " -> выводит последние" + HistoryStorage.STORAGE_SIZE + "команд (без их аргументов)";
     }
 
     @Override

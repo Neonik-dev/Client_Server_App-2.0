@@ -11,16 +11,16 @@ import java.util.LinkedList;
 
 public class InfoCommand implements BaseCommand {
     private static final boolean NEED_TRANSFER_ELEMENT = false;
-    private final String name = "info";
+    private static final String NAME = "info";
 
     @Override
     public String getCommandName() {
-        return name;
+        return NAME;
     }
 
     @Override
     public String getCommandDescription() {
-        return name + " -> выводит информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)";
+        return NAME + " -> выводит информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)";
     }
 
     @Override

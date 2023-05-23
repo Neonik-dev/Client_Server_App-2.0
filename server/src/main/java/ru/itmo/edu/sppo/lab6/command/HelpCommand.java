@@ -10,16 +10,16 @@ import java.util.Map;
 public class HelpCommand implements BaseCommand {
     private static final boolean NEED_TRANSFER_ELEMENT = false;
     private static final Map<String, BaseCommand> COMMANDS = new Commands().getAllCommand();
-    private final String name = "help";
+    private static final String NAME = "help";
 
     @Override
     public String getCommandName() {
-        return name;
+        return NAME;
     }
 
     @Override
     public String getCommandDescription() {
-        return name + " -> выводит справку по всем доступным командам";
+        return NAME + " -> выводит справку по всем доступным командам";
     }
 
     @Override

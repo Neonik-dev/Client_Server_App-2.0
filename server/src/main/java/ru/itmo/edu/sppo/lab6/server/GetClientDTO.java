@@ -40,7 +40,7 @@ public class GetClientDTO {
                     ObjectInputStream ois = new ObjectInputStream(input)
             ) {
                 response = (ClientRequest) ois.readObject();
-                log.debug("Сервер получил от клиента следующее: " + response);
+                log.debug("Сервер получил от клиента следующее: " + response.toString());
             } catch (IOException e) {
                 log.warn("Еще не все пакеты клиента дошли до сервера");
             } catch (ClassNotFoundException e) {

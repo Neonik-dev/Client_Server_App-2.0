@@ -23,9 +23,9 @@ public class Commands {
             BaseCommand addCommand = new AddCommand();
             COMMANDS.put(addCommand.getCommandName(), addCommand);
 
-//            BaseCommand showCommand = new ShowCommand();
-//            COMMANDS.put(showCommand.getName(), showCommand);
-//
+            BaseCommand showCommand = new ShowCommand();
+            COMMANDS.put(showCommand.getCommandName(), showCommand);
+
 //            BaseCommand updateCommand = new UpdateCommand();
 //            COMMANDS.put(updateCommand.getName(), updateCommand);
 //
