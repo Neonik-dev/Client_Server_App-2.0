@@ -10,6 +10,7 @@ import ru.itmo.edu.sppo.lab6.utils.Printer;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MusicBandCollection {
     private static final ValidationMusicBand validationMusicBand;
@@ -62,9 +63,13 @@ public class MusicBandCollection {
 
     public static void show(Printer printer) {
         Collections.sort(musicBandCollection);
-        musicBandCollection.forEach(
-                (musicBand) -> printer.println(musicBand.toString())
-        );
+        if (musicBandCollection.isEmpty()) {
+            printer.println("В коллекции пока ничего нет");
+        } else {
+            musicBandCollection.forEach(
+                    (musicBand) -> printer.println(musicBand.toString())
+            );
+        }
     }
 
     public static boolean checkExistsID(int id) {
@@ -108,5 +113,15 @@ public class MusicBandCollection {
             printer.println(musicBand.toString());
             ALL_ID.remove(id);
         }
+    }
+
+    public static void getUniqueNumberOfParticipants(Printer printer) {
+        Set<Long> uniqueParticipants = musicBandCollection.stream()
+                .filter(
+                        musicBand -> musicBand.getNumberOfParticipants().isPresent()
+                ).map(
+                        musicBand -> musicBand.getNumberOfParticipants().get()
+                ).collect(Collectors.toSet());
+        printer.println(uniqueParticipants.toString());
     }
 }

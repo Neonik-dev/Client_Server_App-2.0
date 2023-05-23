@@ -38,9 +38,12 @@ public class Commands {
             BaseCommand removeHeadCommand = new RemoveHeadCommand();
             COMMANDS.put(removeHeadCommand.getCommandName(), removeHeadCommand);
 
-//            BaseCommand printUniqueNumberOfParticipantsCommand = new PrintUniqueNumberOfParticipantsCommand();
-//            COMMANDS.put(printUniqueNumberOfParticipantsCommand.getName(), printUniqueNumberOfParticipantsCommand);
-//
+            BaseCommand printUniqueNumberOfParticipantsCommand = new PrintUniqueNumberOfParticipantsCommand();
+            COMMANDS.put(
+                    printUniqueNumberOfParticipantsCommand.getCommandName(),
+                    printUniqueNumberOfParticipantsCommand
+            );
+
 //            BaseCommand countLessThanNumberOfParticipantsCommand = new CountLessThanNumberOfParticipantsCommand();
 //            COMMANDS.put(countLessThanNumberOfParticipantsCommand.getName(), countLessThanNumberOfParticipantsCommand);
 //

@@ -5,6 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Optional;
 
 @Data
 public class MusicBand implements Serializable, Comparable<MusicBand> {
@@ -17,6 +18,10 @@ public class MusicBand implements Serializable, Comparable<MusicBand> {
     Date establishmentDate; //Поле может быть null
     MusicGenre genre; //Поле не может быть null
     Studio studio; //Поле не может быть null
+
+    public Optional<Long> getNumberOfParticipants() {
+        return Optional.of(numberOfParticipants);
+    }
 
     @Override
     public int compareTo(MusicBand item) {
