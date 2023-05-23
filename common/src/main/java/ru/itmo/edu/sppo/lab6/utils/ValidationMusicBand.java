@@ -14,17 +14,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Date;
 
-public class MusicBandValidation {
+public class ValidationMusicBand {
     private final Set<String> commandsName;
 
-    public MusicBandValidation(Set<String> commandsName) {
+    public ValidationMusicBand(Set<String> commandsName) {
         this.commandsName = commandsName;
     }
 
     public void checkMusicBand(MusicBand musicBand) throws UnexpectedCommandExceptions, IncorrectDataEntryExceptions {
-        validateId(musicBand.getId());
         validateName(musicBand.getName());
-        validateCreationDate();
         validateDescription(musicBand.getDescription());
         validateGenre(musicBand.getGenre().name());
         validateStudio(musicBand.getStudio().getAddress());

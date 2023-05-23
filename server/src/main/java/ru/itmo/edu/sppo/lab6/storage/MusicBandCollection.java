@@ -5,24 +5,24 @@ import ru.itmo.edu.sppo.lab6.dto.collectionitem.MusicBand;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryInFileExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
-import ru.itmo.edu.sppo.lab6.utils.MusicBandValidation;
+import ru.itmo.edu.sppo.lab6.utils.ValidationMusicBand;
 import ru.itmo.edu.sppo.lab6.utils.Printer;
 
 import java.time.LocalDate;
 import java.util.*;
 
 public class MusicBandCollection {
-    private static final MusicBandValidation musicBandValidation;
+    private static final ValidationMusicBand validationMusicBand;
     private static final HashSet<Integer> ALL_ID = new HashSet<>();
     private static int ID = 0;
     private static final LinkedList<MusicBand> musicBandCollection = new LinkedList<>();
     private static final Date dateCreated = new Date();
 
     static {
-        musicBandValidation = new MusicBandValidation(new Commands().getAllCommand().keySet());
+        validationMusicBand = new ValidationMusicBand(new Commands().getAllCommand().keySet());
     }
 
-    public static LinkedList<MusicBand> getMusicBandLinkedList() {
+    public static LinkedList<MusicBand> getMusicBandCollection() {
         return (LinkedList<MusicBand>) musicBandCollection.clone();
     }
 
@@ -47,21 +47,17 @@ public class MusicBandCollection {
         musicBand.setCreationDate(LocalDate.now());
     }
 
-    private static void checkID(int id) throws IncorrectDataEntryInFileExceptions {
+    private static void checkDuplicateID(int id) throws IncorrectDataEntryInFileExceptions {
         if (ALL_ID.contains(id)) {
             throw new IncorrectDataEntryInFileExceptions("Такой id уже существует");
         }
     }
 
-    public static void add(MusicBand musicBand) throws IncorrectDataEntryExceptions {
-        try {
-            generatePrivateFields(musicBand);
-            musicBandValidation.checkMusicBand(musicBand);
-            musicBandCollection.add(musicBand);
+    public static void add(MusicBand musicBand) throws IncorrectDataEntryExceptions, UnexpectedCommandExceptions {
+        generatePrivateFields(musicBand);
+        validationMusicBand.checkMusicBand(musicBand);
+        musicBandCollection.add(musicBand);
 //            WalWriter.openFile("add" + "\n" + newInstance.rawData());
-        } catch (UnexpectedCommandExceptions e) {
-            System.out.println(e.getMessage());
-        }
     }
 
     public static void show(Printer printer) {
@@ -69,5 +65,34 @@ public class MusicBandCollection {
         musicBandCollection.forEach(
                 (musicBand) -> printer.println(musicBand.toString())
         );
+    }
+
+    public static boolean checkExistsID(int id) {
+        return ALL_ID.contains(id);
+    }
+
+    public static void updateItem(MusicBand musicBandNew, int id) throws UnexpectedCommandExceptions,
+            IncorrectDataEntryExceptions {
+        validationMusicBand.checkMusicBand(musicBandNew);
+        MusicBand musicBandFromCollection = getAndDeleteMusicBandById(id);
+        musicBandCollection.add(mergeMusicBands(musicBandFromCollection, musicBandNew));
+    }
+
+    private static MusicBand mergeMusicBands(MusicBand musicBandFromCollection, MusicBand musicBandNew) {
+        musicBandNew.setId(musicBandFromCollection.getId());
+        musicBandNew.setCreationDate(musicBandFromCollection.getCreationDate());
+        return musicBandNew;
+    }
+
+    private static MusicBand getAndDeleteMusicBandById(int id) {
+        MusicBand musicBand = null;
+        for (MusicBand elem : musicBandCollection) {
+            if (elem.getId() == id) {
+                musicBand = elem;
+                musicBandCollection.remove(elem);
+                break;
+            }
+        }
+        return musicBand;
     }
 }

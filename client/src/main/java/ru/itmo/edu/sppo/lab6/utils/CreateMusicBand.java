@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class CreateMusicBand {
-    private final MusicBandValidation musicBandValidation;
+    private final ValidationMusicBand musicBandValidation;
 
-    public CreateMusicBand(MusicBandValidation musicBandValidation) {
+    public CreateMusicBand(ValidationMusicBand musicBandValidation) {
         this.musicBandValidation = musicBandValidation;
     }
 

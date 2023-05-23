@@ -5,6 +5,7 @@ import ru.itmo.edu.sppo.lab6.command.Commands;
 import ru.itmo.edu.sppo.lab6.dto.ClientRequest;
 import ru.itmo.edu.sppo.lab6.dto.ClientResponse;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
+import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 import ru.itmo.edu.sppo.lab6.storage.GetServerCommands;
 import ru.itmo.edu.sppo.lab6.storage.HistoryStorage;
 import ru.itmo.edu.sppo.lab6.utils.Printer;
@@ -22,7 +23,7 @@ public class InputHandler {
         try {
             BaseCommand command = COMMANDS.get(request.getCommandName());
             if (request.getCommandName().equals(GET_ALL_COMMANDS)) {
-                return GetServerCommands.get();
+                return GetServerCommands.getDetails();
             } else if (command == null) {
                 throw new NullPointerException();
             } else {
@@ -31,7 +32,7 @@ public class InputHandler {
             }
         } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
             printer.println(RECOMMENDATION_HELP_COMMAND);
-        } catch (IncorrectDataEntryExceptions e) {
+        } catch (IncorrectDataEntryExceptions | UnexpectedCommandExceptions e) {
             printer.println(e.getMessage());
         }
         return new ClientResponse(printer.toString());

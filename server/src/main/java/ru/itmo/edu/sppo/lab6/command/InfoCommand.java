@@ -10,7 +10,6 @@ import ru.itmo.edu.sppo.lab6.utils.Printer;
 import java.util.LinkedList;
 
 public class InfoCommand implements BaseCommand {
-    private static final boolean NEED_TRANSFER_ELEMENT = false;
     private static final String NAME = "info";
 
     @Override
@@ -24,14 +23,9 @@ public class InfoCommand implements BaseCommand {
     }
 
     @Override
-    public boolean needToTransferCollectionItem() {
-        return NEED_TRANSFER_ELEMENT;
-    }
-
-    @Override
     public ClientResponse execute(ClientRequest request, Printer printer) throws IncorrectDataEntryExceptions {
         checkArgs(request.getArgument());
-        LinkedList<MusicBand> myCollections = MusicBandCollection.getMusicBandLinkedList();
+        LinkedList<MusicBand> myCollections = MusicBandCollection.getMusicBandCollection();
         printer.println("Тип коллекции -> " + myCollections.getClass().getName());
         printer.println("Дата инициализации коллекции -> " + MusicBandCollection.getDateCreated());
         printer.println("Колличество элементов в коллекции -> " + myCollections.size());

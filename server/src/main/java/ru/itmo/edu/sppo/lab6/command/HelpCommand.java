@@ -8,7 +8,6 @@ import ru.itmo.edu.sppo.lab6.utils.Printer;
 import java.util.Map;
 
 public class HelpCommand implements BaseCommand {
-    private static final boolean NEED_TRANSFER_ELEMENT = false;
     private static final Map<String, BaseCommand> COMMANDS = new Commands().getAllCommand();
     private static final String NAME = "help";
 
@@ -20,11 +19,6 @@ public class HelpCommand implements BaseCommand {
     @Override
     public String getCommandDescription() {
         return NAME + " -> выводит справку по всем доступным командам";
-    }
-
-    @Override
-    public boolean needToTransferCollectionItem() {
-        return NEED_TRANSFER_ELEMENT;
     }
 
     @Override
