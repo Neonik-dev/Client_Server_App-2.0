@@ -29,15 +29,15 @@ public class Commands {
             BaseCommand updateCommand = new UpdateCommand();
             COMMANDS.put(updateCommand.getCommandName(), updateCommand);
 
-//            BaseCommand removeByIdCommand = new RemoveByIdCommand();
-//            COMMANDS.put(removeByIdCommand.getName(), removeByIdCommand);
-//
+            BaseCommand removeByIdCommand = new RemoveByIdCommand();
+            COMMANDS.put(removeByIdCommand.getCommandName(), removeByIdCommand);
+
 //            BaseCommand exitCommand = new ExitCommand();
 //            COMMANDS.put(exitCommand.getName(), exitCommand);
-//
-//            BaseCommand removeHeadCommand = new RemoveHeadCommand();
-//            COMMANDS.put(removeHeadCommand.getName(), removeHeadCommand);
-//
+
+            BaseCommand removeHeadCommand = new RemoveHeadCommand();
+            COMMANDS.put(removeHeadCommand.getCommandName(), removeHeadCommand);
+
 //            BaseCommand printUniqueNumberOfParticipantsCommand = new PrintUniqueNumberOfParticipantsCommand();
 //            COMMANDS.put(printUniqueNumberOfParticipantsCommand.getName(), printUniqueNumberOfParticipantsCommand);
 //

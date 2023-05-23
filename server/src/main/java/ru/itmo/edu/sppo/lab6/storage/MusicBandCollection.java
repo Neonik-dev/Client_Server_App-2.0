@@ -85,14 +85,28 @@ public class MusicBandCollection {
     }
 
     private static MusicBand getAndDeleteMusicBandById(int id) {
-        MusicBand musicBand = null;
         for (MusicBand elem : musicBandCollection) {
             if (elem.getId() == id) {
-                musicBand = elem;
                 musicBandCollection.remove(elem);
-                break;
+                return elem;
             }
         }
-        return musicBand;
+        return null;
+    }
+
+    public static void delete(int id) {
+        getAndDeleteMusicBandById(id);
+        ALL_ID.remove(id);
+    }
+
+    public static void delete(Printer printer) {
+        if (musicBandCollection.isEmpty()) {
+            printer.println("Коллекция пустая, удалять нечего.");
+        } else {
+            int id = Collections.min(ALL_ID);
+            MusicBand musicBand = getAndDeleteMusicBandById(id);
+            printer.println(musicBand.toString());
+            ALL_ID.remove(id);
+        }
     }
 }
