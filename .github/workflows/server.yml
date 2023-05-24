@@ -37,4 +37,4 @@ jobs:
           retention-days: 1
 
       - name: Run checkstyle
-        run: mvn -pl sever -am checkstyle:check
+        run: mvn -pl server -am checkstyle:check
