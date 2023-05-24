@@ -32,9 +32,6 @@ public class Commands {
             BaseCommand removeByIdCommand = new RemoveByIdCommand();
             COMMANDS.put(removeByIdCommand.getCommandName(), removeByIdCommand);
 
-//            BaseCommand exitCommand = new ExitCommand();
-//            COMMANDS.put(exitCommand.getName(), exitCommand);
-
             BaseCommand removeHeadCommand = new RemoveHeadCommand();
             COMMANDS.put(removeHeadCommand.getCommandName(), removeHeadCommand);
 

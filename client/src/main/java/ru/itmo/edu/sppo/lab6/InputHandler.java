@@ -5,17 +5,23 @@ import ru.itmo.edu.sppo.lab6.client.ConnectionToServer;
 import ru.itmo.edu.sppo.lab6.dto.ClientRequest;
 import ru.itmo.edu.sppo.lab6.dto.ClientResponse;
 import ru.itmo.edu.sppo.lab6.dto.collectionitem.MusicBand;
+import ru.itmo.edu.sppo.lab6.exceptions.ExitCommandExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryInFileExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 import ru.itmo.edu.sppo.lab6.utils.CreateMusicBand;
+import ru.itmo.edu.sppo.lab6.utils.ReadProperties;
 import ru.itmo.edu.sppo.lab6.utils.ValidationMusicBand;
 
 import java.util.*;
 
 @Slf4j
 public class InputHandler {
+    public static int TIMEOUT;
+    public static final String TIMEOUT_PROPERTIES = "server.timeout";
     public static final String GET_ALL_COMMANDS = "getAllCommands";
+    public static final String EXIT_COMMAND = "exit";
+    private static final String EXIT_TEXT = "Клиент завершает свою работу. До связи\uD83E\uDD19!";
     private static final String GREETING = "Добро пожаловать!\nМожете выполнить команду -> help, и узнаете все команды";
     private static final String HELP_TEXT =
             "Напишите любую команду из списка. Чтобы посмотреть список команд воспользуйтесь командой -> help";
@@ -24,23 +30,29 @@ public class InputHandler {
     private Map<String, Map<String, Boolean>> SERVER_COMMANDS;
 
     {
+        TIMEOUT = Integer.parseInt(new ReadProperties().read(TIMEOUT_PROPERTIES));
+
         ClientRequest clientRequest = ClientRequest.builder().commandName(GET_ALL_COMMANDS).build();
         do {
             SERVER_COMMANDS = (Map<String, Map<String, Boolean>>) new ConnectionToServer()
                     .interactionWithServer(clientRequest);
             if (SERVER_COMMANDS == null) {
-                try {
-                    log.warn("Получить команды не удалось, попробуем еще раз через 5 секунд");
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    log.error("Невозможно получить команды от сервера");
-                }
+                waitStartServer();
             }
         } while (SERVER_COMMANDS == null);
         log.debug("Команды сервера получены");
 
         musicBandValidation = new ValidationMusicBand(SERVER_COMMANDS.keySet());
         scanner = new Scanner(System.in);
+    }
+
+    private static void waitStartServer() {
+        try {
+            log.warn("Получить команды не удалось, попробуем еще раз через 5 секунд");
+            Thread.sleep(TIMEOUT);
+        } catch (InterruptedException e) {
+            log.error("Невозможно получить команды от сервера");
+        }
     }
 
     public void startInputHandler() {
@@ -54,18 +66,23 @@ public class InputHandler {
             } catch (UnexpectedCommandExceptions | IncorrectDataEntryInFileExceptions |
                      IncorrectDataEntryExceptions e) {
                 System.out.println(e.getMessage());
+            } catch (ExitCommandExceptions e) {
+                System.out.println(e.getMessage());
+                break;
             }
         }
     }
 
     private ClientRequest createBodyRequest() throws UnexpectedCommandExceptions,
-            IncorrectDataEntryInFileExceptions, IncorrectDataEntryExceptions {
+            IncorrectDataEntryInFileExceptions, IncorrectDataEntryExceptions, ExitCommandExceptions {
         ClientRequest.ClientRequestBuilder clientRequest = ClientRequest.builder();
 
         String[] inputData = scanner.nextLine().split(" ");
         String commandName = inputData[0];
 
-        if (!SERVER_COMMANDS.containsKey(commandName)) {
+        if (commandName.equals(EXIT_COMMAND)) {
+            throw new ExitCommandExceptions(EXIT_TEXT);
+        } else if (!SERVER_COMMANDS.containsKey(commandName)) {
             throw new NullPointerException();
         }
 
