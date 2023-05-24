@@ -1,0 +1,40 @@
+name: Server CI
+on:
+  push:
+    paths:
+      - 'server/**'
+      - 'common/**'
+      - 'checkstyle.xml'
+  pull_request:
+    paths:
+      - 'server/**'
+      - 'common/**'
+      - 'checkstyle.xml'
+
+env:
+  ARTEFACT_NAME: server.jar
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn package -pl server -am
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: server/target/server-1.0-SNAPSHOT.jar
+          name: $ARTEFACT_NAME
+          retention-days: 1
+
+      - name: Run checkstyle
+        run: mvn -pl sever -am checkstyle:check
