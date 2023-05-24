@@ -23,6 +23,10 @@ public class MusicBand implements Serializable, Comparable<MusicBand> {
         return Optional.ofNullable(numberOfParticipants);
     }
 
+    public Optional<Date> getSafeEstablishmentDate() {
+        return Optional.ofNullable(establishmentDate);
+    }
+
     @Override
     public int compareTo(MusicBand item) {
         return name.compareTo(item.name);

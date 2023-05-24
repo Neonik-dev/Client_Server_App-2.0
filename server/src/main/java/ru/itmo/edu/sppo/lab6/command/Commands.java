@@ -52,9 +52,9 @@ public class Commands {
 //
 //            BaseCommand executeScriptCommand = new ExecuteScriptCommand();
 //            COMMANDS.put(executeScriptCommand.getName(), executeScriptCommand);
-//
-//            BaseCommand printFieldAscendingEstablishmentDateCommand = new PrintFieldAscendingEstablishmentDateCommand();
-//            COMMANDS.put(printFieldAscendingEstablishmentDateCommand.getName(), printFieldAscendingEstablishmentDateCommand);
+
+            BaseCommand printEstablishmentDateSortAscCommand = new PrintEstablishmentDateSortAscCommand();
+            COMMANDS.put(printEstablishmentDateSortAscCommand.getCommandName(), printEstablishmentDateSortAscCommand);
         }
     }
 

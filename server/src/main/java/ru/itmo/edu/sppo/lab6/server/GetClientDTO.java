@@ -31,7 +31,8 @@ public class GetClientDTO {
         ClientRequest response = null;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        while (response == null) {
+        int retries = 0;
+        while (response == null && retries < 10) {
             Timeout.tcpTimeout();
             readTcpPackage(outputStream);
 
@@ -42,12 +43,17 @@ public class GetClientDTO {
                 response = (ClientRequest) ois.readObject();
                 log.debug("Сервер получил от клиента следующее: " + response.toString());
             } catch (IOException e) {
+                retries++;
                 log.warn("Еще не все пакеты клиента дошли до сервера");
             } catch (ClassNotFoundException e) {
                 log.error(e.getMessage());
             }
         }
         outputStream.close();
+
+        if (retries >= 10) {
+            log.warn("С клиента пришли битые данные. Невозможно десерриализовать.");
+        }
         return response;
     }
 
