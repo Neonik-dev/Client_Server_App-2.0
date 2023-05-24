@@ -21,8 +21,8 @@ public class CountLessThanNumberOfParticipantsCommand implements BaseCommand {
 
     @Override
     public String getCommandDescription() {
-        return NAME + " numberOfParticipants -> выводит количество элементов," +
-                " значение поля numberOfParticipants которых меньше заданного";
+        return NAME + " numberOfParticipants -> выводит количество элементов,"
+                + " значение поля numberOfParticipants которых меньше заданного";
     }
 
     @Override

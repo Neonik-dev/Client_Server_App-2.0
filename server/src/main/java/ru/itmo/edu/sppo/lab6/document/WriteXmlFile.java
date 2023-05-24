@@ -18,17 +18,17 @@ import java.util.Optional;
 
 public class WriteXmlFile {
     private static final String FILE_NAME_PROPERTIES = "files.output";
-    private static final String fileName;
+    private static final String FILE_NAME;
     private XMLStreamWriter xmlWriter;
 
     static {
-        fileName = new ReadProperties().read(FILE_NAME_PROPERTIES);
+        FILE_NAME = new ReadProperties().read(FILE_NAME_PROPERTIES);
     }
 
     public void writeFile(Printer printer) throws XMLStreamException {
         try {
-            CheckFile.checkFileForWrite(fileName);
-            xmlWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(new FileWriter(fileName));
+            CheckFile.checkFileForWrite(FILE_NAME);
+            xmlWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(new FileWriter(FILE_NAME));
 
             writeContent();
             printer.println("Сохранение в файл прошло успешно");
@@ -69,29 +69,32 @@ public class WriteXmlFile {
         writeXmlTag("creationDate", musicBand.getCreationDate().toString());
 
         Optional<Long> participants = musicBand.getSafeNumberOfParticipants();
+        String nameTagNumberOfParticipants = "numberOfParticipants";
         if (participants.isEmpty()) {
-            xmlWriter.writeEmptyElement("numberOfParticipants");
+            xmlWriter.writeEmptyElement(nameTagNumberOfParticipants);
         } else {
-            writeXmlTag("numberOfParticipants", Long.toString(participants.get()));
+            writeXmlTag(nameTagNumberOfParticipants, Long.toString(participants.get()));
         }
 
         writeXmlTag("description", musicBand.getDescription());
 
         Optional<Date> date = musicBand.getSafeEstablishmentDate();
+        String nameTagEstablishmentDate = "establishmentDate";
         if (date.isEmpty()) {
-            xmlWriter.writeEmptyElement("establishmentDate");
+            xmlWriter.writeEmptyElement(nameTagEstablishmentDate);
         } else {
-            writeXmlTag("establishmentDate", new SimpleDateFormat("dd.MM.yyyy").format(date.get()));
+            writeXmlTag(nameTagEstablishmentDate, new SimpleDateFormat("dd.MM.yyyy").format(date.get()));
         }
 
         writeXmlTag("genre", musicBand.getGenre().toString());
 
         Optional<String> address = musicBand.getStudio().getAddress();
+        String nameTagAddress = "address";
         xmlWriter.writeStartElement("studio");
         if (address.isEmpty()) {
-            xmlWriter.writeEmptyElement("address");
+            xmlWriter.writeEmptyElement(nameTagAddress);
         } else {
-            writeXmlTag("address", address.get());
+            writeXmlTag(nameTagAddress, address.get());
         }
         xmlWriter.writeEndElement();
 

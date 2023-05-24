@@ -10,6 +10,9 @@ import java.nio.channels.SocketChannel;
 
 @Slf4j
 public class SendClientDTO {
+    private SendClientDTO() {
+    }
+
     public static void sendDTO(SocketChannel socketChannel, Object response) throws IOException {
         log.debug("Отправляем пользователю ответ");
         ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();

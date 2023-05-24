@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Timeout {
     private static final int TIMEOUT = 100;
+
+    private Timeout() {
+    }
+
     public static void tcpTimeout() {
         try {
             Thread.sleep(TIMEOUT);

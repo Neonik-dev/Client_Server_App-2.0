@@ -15,15 +15,19 @@ import java.util.Arrays;
 
 @Slf4j
 public class GetClientDTO {
-    private static final String BUFFER_SIZE_PROPERTIES = "buffer_size";
-    private final int BUFFER_SIZE;
+    private static final String BUFFER_SIZE_PROPERTIES = "bufferSize";
+    private static final int COUNT_RETRIES = 10;
+    private static final int BUFFER_SIZE;
     private final SocketChannel socketChannel;
 
-    public GetClientDTO(SocketChannel socketChannel) {
-        this.socketChannel = socketChannel;
+    static {
         BUFFER_SIZE = Integer.parseInt(
                 new ReadProperties().read(BUFFER_SIZE_PROPERTIES)
         );
+    }
+
+    public GetClientDTO(SocketChannel socketChannel) {
+        this.socketChannel = socketChannel;
     }
 
     public ClientRequest getDTO() throws IOException {
@@ -32,7 +36,7 @@ public class GetClientDTO {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         int retries = 0;
-        while (response == null && retries < 10) {
+        while (response == null && retries < COUNT_RETRIES) {
             Timeout.tcpTimeout();
             readTcpPackage(outputStream);
 
@@ -51,7 +55,7 @@ public class GetClientDTO {
         }
         outputStream.close();
 
-        if (retries >= 10) {
+        if (retries >= COUNT_RETRIES) {
             log.warn("С клиента пришли битые данные. Невозможно десерриализовать.");
         }
         return response;

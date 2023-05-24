@@ -9,6 +9,9 @@ public class CheckFile {
     private static final String FORBIDDEN_TO_WRITE_TEXT = "В файл невозможно произвести запись, недостаточно прав";
     private static final String FORBIDDEN_TO_READ_TEXT = "Файл невозможно прочитать, недостаточно прав";
 
+    private CheckFile() {
+    }
+
     public static void checkFileForRead(String fileName) throws IncorrectDataEntryExceptions {
         File file = new File(fileName);
         checkIsFile(file, fileName);

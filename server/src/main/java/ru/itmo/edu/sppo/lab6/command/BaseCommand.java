@@ -20,7 +20,8 @@ public interface BaseCommand {
         return GetServerCommands.getTemplateDetails();
     }
 
-    ClientResponse execute(ClientRequest request, Printer printer) throws IncorrectDataEntryExceptions, UnexpectedCommandExceptions;
+    ClientResponse execute(ClientRequest request, Printer printer)
+            throws IncorrectDataEntryExceptions, UnexpectedCommandExceptions;
 
     default void checkArgs(String[] args) throws IncorrectDataEntryExceptions {
         if (args.length != 0) {

@@ -19,7 +19,6 @@ public class CreateMusicBand {
 
         MusicBand musicBand = new MusicBand();
 
-
         while (true) {
             try {
                 System.out.print("Введите название музыкальной группы: ");

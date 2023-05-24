@@ -9,15 +9,15 @@ import java.util.Optional;
 
 @Data
 public class MusicBand implements Serializable, Comparable<MusicBand> {
-    int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    String name; //Поле не может быть null, Строка не может быть пустой
-    Coordinates coordinates; //Поле не может быть null
-    LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    Long numberOfParticipants; //Поле может быть null, Значение поля должно быть больше 0
-    String description; //Поле не может быть null
-    Date establishmentDate; //Поле может быть null
-    MusicGenre genre; //Поле не может быть null
-    Studio studio; //Поле не может быть null
+    private int id; //Значение поля должно быть больше 0, уникальным и генерироваться автоматически
+    private String name; //Поле не может быть null, Строка не может быть пустой
+    private Coordinates coordinates; //Поле не может быть null
+    private LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    private Long numberOfParticipants; //Поле может быть null, Значение поля должно быть больше 0
+    private String description; //Поле не может быть null
+    private Date establishmentDate; //Поле может быть null
+    private MusicGenre genre; //Поле не может быть null
+    private Studio studio; //Поле не может быть null
 
     public Optional<Long> getSafeNumberOfParticipants() {
         return Optional.ofNullable(numberOfParticipants);

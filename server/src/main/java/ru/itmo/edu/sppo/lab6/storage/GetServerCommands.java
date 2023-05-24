@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GetServerCommands {
-    private static final String[] excludeCommands = {new HelpCommand().getCommandName()};
+    private static final String[] EXCLUDE_COMMANDS = {new HelpCommand().getCommandName()};
     private static final Map<String, Map<String, Boolean>> SERVER_COMMANDS = new HashMap<>();
     private static final Map<String, Boolean> TEMPLATE_DETAILS = Map.of(
             "transmitObject", false,
@@ -19,7 +19,10 @@ public class GetServerCommands {
         new Commands().getAllCommand().forEach(
                 (key, value) -> SERVER_COMMANDS.put(key, value.getDetailsFromClient())
         );
-        Arrays.stream(excludeCommands).forEach(SERVER_COMMANDS::remove);
+        Arrays.stream(EXCLUDE_COMMANDS).forEach(SERVER_COMMANDS::remove);
+    }
+
+    private GetServerCommands() {
     }
 
     public static Map<String, Boolean> getTemplateDetails() {
@@ -31,6 +34,6 @@ public class GetServerCommands {
     }
 
     public static String[] getExcludeCommands() {
-        return excludeCommands;
+        return EXCLUDE_COMMANDS;
     }
 }

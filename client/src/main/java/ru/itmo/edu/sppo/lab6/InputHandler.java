@@ -17,33 +17,33 @@ import java.util.*;
 
 @Slf4j
 public class InputHandler {
-    public static int TIMEOUT;
-    public static final String TIMEOUT_PROPERTIES = "server.timeout";
-    public static final String GET_ALL_COMMANDS = "getAllCommands";
-    public static final String EXIT_COMMAND = "exit";
+    private static final String TIMEOUT_PROPERTIES = "server.timeout";
+    private static final String GET_ALL_COMMANDS = "getAllCommands";
+    private static final String EXIT_COMMAND = "exit";
     private static final String EXIT_TEXT = "Клиент завершает свою работу. До связи\uD83E\uDD19!";
     private static final String GREETING = "Добро пожаловать!\nМожете выполнить команду -> help, и узнаете все команды";
     private static final String HELP_TEXT =
             "Напишите любую команду из списка. Чтобы посмотреть список команд воспользуйтесь командой -> help";
-    public static Scanner scanner;
-    private final ValidationMusicBand musicBandValidation;
-    private Map<String, Map<String, Boolean>> SERVER_COMMANDS;
+    private static final int TIMEOUT;
+    private static final Scanner SCANNER;
+    private static final ValidationMusicBand VALIDATION_MUSIC_BAND;
+    private static Map<String, Map<String, Boolean>> serverCommands;
 
-    {
+    static {
         TIMEOUT = Integer.parseInt(new ReadProperties().read(TIMEOUT_PROPERTIES));
 
         ClientRequest clientRequest = ClientRequest.builder().commandName(GET_ALL_COMMANDS).build();
         do {
-            SERVER_COMMANDS = (Map<String, Map<String, Boolean>>) new ConnectionToServer()
+            serverCommands = (Map<String, Map<String, Boolean>>) new ConnectionToServer()
                     .interactionWithServer(clientRequest);
-            if (SERVER_COMMANDS == null) {
+            if (serverCommands == null) {
                 waitStartServer();
             }
-        } while (SERVER_COMMANDS == null);
+        } while (serverCommands == null);
         log.debug("Команды сервера получены");
 
-        musicBandValidation = new ValidationMusicBand(SERVER_COMMANDS.keySet());
-        scanner = new Scanner(System.in);
+        VALIDATION_MUSIC_BAND = new ValidationMusicBand(serverCommands.keySet());
+        SCANNER = new Scanner(System.in);
     }
 
     private static void waitStartServer() {
@@ -57,14 +57,14 @@ public class InputHandler {
 
     public void startInputHandler() {
         System.out.println(GREETING);
-        while (scanner.hasNextLine()) {
+        while (SCANNER.hasNextLine()) {
             try {
                 new ConnectionToServer().interactionWithServer(createBodyRequest());
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
                 System.out.println(e.getMessage());
                 System.out.println(HELP_TEXT);
-            } catch (UnexpectedCommandExceptions | IncorrectDataEntryInFileExceptions |
-                     IncorrectDataEntryExceptions e) {
+            } catch (UnexpectedCommandExceptions | IncorrectDataEntryInFileExceptions
+                     | IncorrectDataEntryExceptions e) {
                 System.out.println(e.getMessage());
             } catch (ExitCommandExceptions e) {
                 System.out.println(e.getMessage());
@@ -77,20 +77,20 @@ public class InputHandler {
             IncorrectDataEntryInFileExceptions, IncorrectDataEntryExceptions, ExitCommandExceptions {
         ClientRequest.ClientRequestBuilder clientRequest = ClientRequest.builder();
 
-        String[] inputData = scanner.nextLine().split(" ");
+        String[] inputData = SCANNER.nextLine().split(" ");
         String commandName = inputData[0];
 
         if (commandName.equals(EXIT_COMMAND)) {
             throw new ExitCommandExceptions(EXIT_TEXT);
-        } else if (!SERVER_COMMANDS.containsKey(commandName)) {
+        } else if (!serverCommands.containsKey(commandName)) {
             throw new NullPointerException();
         }
 
-        if (SERVER_COMMANDS.get(commandName).get("firstGetCommand")) {
+        if (serverCommands.get(commandName).get("firstGetCommand")) {
             postServerAdditionalRequest(inputData);
         }
-        if (SERVER_COMMANDS.get(commandName).get("transmitObject")) {
-            MusicBand musicBand = new CreateMusicBand(musicBandValidation).create(scanner);
+        if (serverCommands.get(commandName).get("transmitObject")) {
+            MusicBand musicBand = new CreateMusicBand(VALIDATION_MUSIC_BAND).create(SCANNER);
             clientRequest.musicBand(musicBand);
         }
 

@@ -18,6 +18,9 @@ public class InputHandler {
             "Напишите любую команду из списка. Чтобы посмотреть список команд воспользуйтесь командой -> help";
     private static final Map<String, BaseCommand> COMMANDS = new Commands().getAllCommand();
 
+    private InputHandler() {
+    }
+
     public static Object executeCommand(ClientRequest request) {
         Printer printer = new Printer();
         try {

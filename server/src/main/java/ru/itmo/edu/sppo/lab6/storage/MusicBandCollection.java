@@ -13,34 +13,37 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MusicBandCollection {
-    private static final ValidationMusicBand validationMusicBand;
+    private static final ValidationMusicBand VALIDATION_MUSIC_BAND;
     private static final HashSet<Integer> ALL_ID = new HashSet<>();
-    private static int ID = 0;
-    private static final LinkedList<MusicBand> musicBandCollection = new LinkedList<>();
-    private static final Date dateCreated = new Date();
+    private static int idForMusicBand = 0;
+    private static final LinkedList<MusicBand> MUSIC_BAND_COLLECTION = new LinkedList<>();
+    private static final Date DATE_CREATED = new Date();
 
     static {
-        validationMusicBand = new ValidationMusicBand(new Commands().getAllCommand().keySet());
+        VALIDATION_MUSIC_BAND = new ValidationMusicBand(new Commands().getAllCommand().keySet());
+    }
+
+    private MusicBandCollection() {
     }
 
     public static LinkedList<MusicBand> getMusicBandCollection() {
-        return (LinkedList<MusicBand>) musicBandCollection.clone();
+        return (LinkedList<MusicBand>) MUSIC_BAND_COLLECTION.clone();
     }
 
     public static String getDateCreated() {
-        return dateCreated.toString();
+        return DATE_CREATED.toString();
     }
 
     public static void clear() {
-        musicBandCollection.clear();
+        MUSIC_BAND_COLLECTION.clear();
         ALL_ID.clear();
     }
 
     private static int generatorId() {
-        while (ALL_ID.contains(++ID)) {
+        while (ALL_ID.contains(++idForMusicBand)) {
         }
-        ALL_ID.add(ID);
-        return ID;
+        ALL_ID.add(idForMusicBand);
+        return idForMusicBand;
     }
 
     private static void generatePrivateFields(MusicBand musicBand) {
@@ -56,17 +59,17 @@ public class MusicBandCollection {
 
     public static void add(MusicBand musicBand) throws IncorrectDataEntryExceptions, UnexpectedCommandExceptions {
         generatePrivateFields(musicBand);
-        validationMusicBand.checkMusicBand(musicBand);
-        musicBandCollection.add(musicBand);
+        VALIDATION_MUSIC_BAND.checkMusicBand(musicBand);
+        MUSIC_BAND_COLLECTION.add(musicBand);
 //            WalWriter.openFile("add" + "\n" + newInstance.rawData());
     }
 
     public static void show(Printer printer) {
-        Collections.sort(musicBandCollection);
-        if (musicBandCollection.isEmpty()) {
+        Collections.sort(MUSIC_BAND_COLLECTION);
+        if (MUSIC_BAND_COLLECTION.isEmpty()) {
             printer.println("В коллекции пока ничего нет");
         } else {
-            musicBandCollection.forEach(
+            MUSIC_BAND_COLLECTION.forEach(
                     (musicBand) -> printer.println(musicBand.toString())
             );
         }
@@ -78,9 +81,9 @@ public class MusicBandCollection {
 
     public static void updateItem(MusicBand musicBandNew, int id) throws UnexpectedCommandExceptions,
             IncorrectDataEntryExceptions {
-        validationMusicBand.checkMusicBand(musicBandNew);
+        VALIDATION_MUSIC_BAND.checkMusicBand(musicBandNew);
         MusicBand musicBandFromCollection = getAndDeleteMusicBandById(id);
-        musicBandCollection.add(mergeMusicBands(musicBandFromCollection, musicBandNew));
+        MUSIC_BAND_COLLECTION.add(mergeMusicBands(musicBandFromCollection, musicBandNew));
     }
 
     private static MusicBand mergeMusicBands(MusicBand musicBandFromCollection, MusicBand musicBandNew) {
@@ -90,9 +93,9 @@ public class MusicBandCollection {
     }
 
     private static MusicBand getAndDeleteMusicBandById(int id) {
-        for (MusicBand elem : musicBandCollection) {
+        for (MusicBand elem : MUSIC_BAND_COLLECTION) {
             if (elem.getId() == id) {
-                musicBandCollection.remove(elem);
+                MUSIC_BAND_COLLECTION.remove(elem);
                 return elem;
             }
         }
@@ -105,7 +108,7 @@ public class MusicBandCollection {
     }
 
     public static void delete(Printer printer) {
-        if (musicBandCollection.isEmpty()) {
+        if (MUSIC_BAND_COLLECTION.isEmpty()) {
             printer.println("Коллекция пустая, удалять нечего.");
         } else {
             int id = Collections.min(ALL_ID);
@@ -116,7 +119,7 @@ public class MusicBandCollection {
     }
 
     public static void getUniqueNumberOfParticipants(Printer printer) {
-        Set<Long> uniqueParticipants = musicBandCollection.stream()
+        Set<Long> uniqueParticipants = MUSIC_BAND_COLLECTION.stream()
                 .filter(
                         musicBand -> musicBand.getSafeNumberOfParticipants().isPresent()
                 ).map(
@@ -126,10 +129,10 @@ public class MusicBandCollection {
     }
 
     public static long countNumberOfParticipants(long number) {
-        return musicBandCollection.stream()
+        return MUSIC_BAND_COLLECTION.stream()
                 .filter(
-                        musicBand -> (musicBand.getSafeNumberOfParticipants().isPresent()) &&
-                                (musicBand.getSafeNumberOfParticipants().get() < number)
+                        musicBand -> musicBand.getSafeNumberOfParticipants().isPresent()
+                                && musicBand.getSafeNumberOfParticipants().get() < number
                 ).count();
     }
 }

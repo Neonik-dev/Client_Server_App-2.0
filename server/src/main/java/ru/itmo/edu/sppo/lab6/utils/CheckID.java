@@ -4,6 +4,9 @@ import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.storage.MusicBandCollection;
 
 public class CheckID {
+    private CheckID() {
+    }
+
     public static void checkExistsID(String rawID) throws IncorrectDataEntryExceptions {
         try {
             int id = Integer.parseInt(rawID);

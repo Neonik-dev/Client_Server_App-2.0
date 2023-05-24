@@ -46,7 +46,7 @@ public class PrintEstablishmentDateSortAscCommand implements BaseCommand {
                                 musicBand.getSafeEstablishmentDate().get().toString()
                         )
                 );
-        System.out.println("1 " + printer.toString());
+
         return new ClientResponse(printer.toString());
     }
 }

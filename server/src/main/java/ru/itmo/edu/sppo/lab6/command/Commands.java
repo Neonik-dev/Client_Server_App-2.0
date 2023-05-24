@@ -43,7 +43,10 @@ public class Commands {
             );
 
             BaseCommand countLessThanNumberOfParticipantsCommand = new CountLessThanNumberOfParticipantsCommand();
-            COMMANDS.put(countLessThanNumberOfParticipantsCommand.getCommandName(), countLessThanNumberOfParticipantsCommand);
+            COMMANDS.put(
+                    countLessThanNumberOfParticipantsCommand.getCommandName(),
+                    countLessThanNumberOfParticipantsCommand
+            );
 
             BaseCommand saveCommand = new SaveCommand();
             COMMANDS.put(saveCommand.getCommandName(), saveCommand);

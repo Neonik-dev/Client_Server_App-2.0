@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class HelpCommand implements BaseCommand {
-    private static Map<String, BaseCommand> COMMANDS;
+    private static Map<String, BaseCommand> commands;
     private static final String NAME = "help";
 
     @Override
@@ -28,16 +28,16 @@ public class HelpCommand implements BaseCommand {
         checkArgs(request.getArgument());
         getCommands();
 
-        COMMANDS.keySet().forEach(
-                key -> printer.println(COMMANDS.get(key).getCommandDescription())
+        commands.keySet().forEach(
+                key -> printer.println(commands.get(key).getCommandDescription())
         );
         return new ClientResponse(printer.toString());
     }
 
     public void getCommands() {
-        if (COMMANDS == null) {
-            COMMANDS = new Commands().getAllCommand();
-            Arrays.stream(GetServerCommands.getExcludeCommands()).forEach(COMMANDS::remove);
+        if (commands == null) {
+            commands = new Commands().getAllCommand();
+            Arrays.stream(GetServerCommands.getExcludeCommands()).forEach(commands::remove);
         }
     }
 }

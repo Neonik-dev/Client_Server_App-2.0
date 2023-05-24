@@ -8,6 +8,9 @@ import java.net.Socket;
 
 @Slf4j
 public class GetFromServer {
+    private GetFromServer() {
+    }
+
     public static Object get(Socket clientSocket) throws IOException {
         log.debug("Обрабатываем ответ от сервера");
         Object response = null;

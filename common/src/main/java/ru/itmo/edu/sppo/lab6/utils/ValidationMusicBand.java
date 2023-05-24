@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.Date;
 
 public class ValidationMusicBand {
+    private static final String NUMBER_MUST_MORE_ZERO_TEXT = "Число должно быть больше 0";
     private final Set<String> commandsName;
 
     public ValidationMusicBand(Set<String> commandsName) {
@@ -45,7 +46,7 @@ public class ValidationMusicBand {
 
     public int validateId(int id) throws IncorrectDataEntryExceptions {
         if (id <= 0) {
-            throw new IncorrectDataEntryExceptions("Число должно быть больше 0");
+            throw new IncorrectDataEntryExceptions(NUMBER_MUST_MORE_ZERO_TEXT);
         }
         return id;
     }
@@ -73,8 +74,8 @@ public class ValidationMusicBand {
             );
         } catch (NumberFormatException | NullPointerException e) {
             errorMessage =
-                    "Долгота должна быть вещественным числом (в качестве разделителя использовать '.'), " +
-                            "а широта - целое число (-2^63 <= широта <= 2^63 -1).";
+                    "Долгота должна быть вещественным числом (в качестве разделителя использовать '.'), "
+                            + "а широта - целое число (-2^63 <= широта <= 2^63 -1).";
         }
         throw new IncorrectDataEntryExceptions(errorMessage);
     }
@@ -95,7 +96,7 @@ public class ValidationMusicBand {
             if (parseNumber > 0) {
                 return parseNumber;
             }
-            errorMessage = "Число должно быть больше 0";
+            errorMessage = NUMBER_MUST_MORE_ZERO_TEXT;
         } catch (IncorrectLongTypeExceptions e) {
             errorMessage = e.getMessage();
         }
@@ -103,8 +104,7 @@ public class ValidationMusicBand {
     }
 
     public String validateDescription(String description)
-            throws UnexpectedCommandExceptions, IncorrectDataEntryExceptions
-    {
+            throws UnexpectedCommandExceptions, IncorrectDataEntryExceptions {
         if (description != null && !description.isEmpty()) {
             checkCommand(description);
             return description;
@@ -113,8 +113,7 @@ public class ValidationMusicBand {
     }
 
     public Date validateEstablishmentDate(String rawDate)
-            throws UnexpectedCommandExceptions, IncorrectDataEntryExceptions
-    {
+            throws UnexpectedCommandExceptions, IncorrectDataEntryExceptions {
         if (rawDate == null || rawDate.isEmpty()) {
             return null;
         }
@@ -143,9 +142,8 @@ public class ValidationMusicBand {
             errorMessage = "Поле genre не может быть пустым, необходимо выбрать один вариант из списка.";
         } else {
             checkCommand(genre);
-            genre = genre.toUpperCase();
             try {
-                return MusicGenre.valueOf(genre);
+                return MusicGenre.valueOf(genre.toUpperCase());
             } catch (IllegalArgumentException e) {
                 errorMessage = "Необходимо выбрать один из перечисленных вариантов!";
             }
@@ -155,10 +153,10 @@ public class ValidationMusicBand {
 
     public Studio validateStudio(String address) throws UnexpectedCommandExceptions {
         if (address == null || address.isEmpty()) {
-            address = null;
-        } else {
-            checkCommand(address);
+            return new Studio(null);
         }
+
+        checkCommand(address);
         return new Studio(address);
     }
 
