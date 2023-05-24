@@ -1,4 +1,4 @@
-package ru.itmo.edu.sppo.lab6.utils;
+package ru.itmo.edu.sppo.lab6.document;
 
 import lombok.extern.slf4j.Slf4j;
 

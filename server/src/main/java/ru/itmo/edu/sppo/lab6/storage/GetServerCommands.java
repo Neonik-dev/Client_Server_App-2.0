@@ -1,11 +1,14 @@
 package ru.itmo.edu.sppo.lab6.storage;
 
 import ru.itmo.edu.sppo.lab6.command.Commands;
+import ru.itmo.edu.sppo.lab6.command.HelpCommand;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GetServerCommands {
+    private static final String[] excludeCommands = {new HelpCommand().getCommandName()};
     private static final Map<String, Map<String, Boolean>> SERVER_COMMANDS = new HashMap<>();
     private static final Map<String, Boolean> TEMPLATE_DETAILS = Map.of(
             "transmitObject", false,
@@ -16,6 +19,7 @@ public class GetServerCommands {
         new Commands().getAllCommand().forEach(
                 (key, value) -> SERVER_COMMANDS.put(key, value.getDetailsFromClient())
         );
+        Arrays.stream(excludeCommands).forEach(SERVER_COMMANDS::remove);
     }
 
     public static Map<String, Boolean> getTemplateDetails() {
@@ -24,5 +28,9 @@ public class GetServerCommands {
 
     public static Map<String, Map<String, Boolean>> getDetails() {
         return SERVER_COMMANDS;
+    }
+
+    public static String[] getExcludeCommands() {
+        return excludeCommands;
     }
 }

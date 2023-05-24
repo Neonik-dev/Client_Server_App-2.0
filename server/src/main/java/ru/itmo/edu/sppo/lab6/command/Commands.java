@@ -2,6 +2,7 @@ package ru.itmo.edu.sppo.lab6.command;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Commands {
     private static final Map<String, BaseCommand> COMMANDS = new HashMap<>();
@@ -44,9 +45,9 @@ public class Commands {
             BaseCommand countLessThanNumberOfParticipantsCommand = new CountLessThanNumberOfParticipantsCommand();
             COMMANDS.put(countLessThanNumberOfParticipantsCommand.getCommandName(), countLessThanNumberOfParticipantsCommand);
 
-//            BaseCommand saveCommand = new SaveCommand();
-//            COMMANDS.put(saveCommand.getName(), saveCommand);
-//
+            BaseCommand saveCommand = new SaveCommand();
+            COMMANDS.put(saveCommand.getCommandName(), saveCommand);
+
 //            BaseCommand executeScriptCommand = new ExecuteScriptCommand();
 //            COMMANDS.put(executeScriptCommand.getName(), executeScriptCommand);
 
@@ -56,6 +57,7 @@ public class Commands {
     }
 
     public Map<String, BaseCommand> getAllCommand() {
-        return COMMANDS;
+        return COMMANDS.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

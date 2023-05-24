@@ -2,7 +2,7 @@ package ru.itmo.edu.sppo.lab6.server;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.itmo.edu.sppo.lab6.dto.ClientRequest;
-import ru.itmo.edu.sppo.lab6.utils.ReadProperties;
+import ru.itmo.edu.sppo.lab6.document.ReadProperties;
 import ru.itmo.edu.sppo.lab6.utils.Timeout;
 
 import java.io.ByteArrayInputStream;
