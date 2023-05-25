@@ -1,0 +1,40 @@
+name: Client CI
+on:
+  push:
+    paths:
+      - 'client/**'
+      - 'common/**'
+      - 'checkstyle.xml'
+  pull_request:
+    paths:
+      - 'client/**'
+      - 'common/**'
+      - 'checkstyle.xml'
+
+env:
+  ARTEFACT_NAME: client.jar
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn package -pl client -am
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: client/target/client-1.0-SNAPSHOT.jar
+          name: $ARTEFACT_NAME
+          retention-days: 1
+
+      - name: Run checkstyle
+        run: mvn -pl client -am checkstyle:check
