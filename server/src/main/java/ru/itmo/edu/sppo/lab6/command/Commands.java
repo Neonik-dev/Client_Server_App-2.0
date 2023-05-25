@@ -51,9 +51,6 @@ public class Commands {
             BaseCommand saveCommand = new SaveCommand();
             COMMANDS.put(saveCommand.getCommandName(), saveCommand);
 
-//            BaseCommand executeScriptCommand = new ExecuteScriptCommand();
-//            COMMANDS.put(executeScriptCommand.getName(), executeScriptCommand);
-
             BaseCommand printEstablishmentDateSortAscCommand = new PrintEstablishmentDateSortAscCommand();
             COMMANDS.put(printEstablishmentDateSortAscCommand.getCommandName(), printEstablishmentDateSortAscCommand);
         }
