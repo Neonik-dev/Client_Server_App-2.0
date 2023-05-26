@@ -1,112 +1,112 @@
 package ru.itmo.edu.sppo.lab6;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import ru.itmo.edu.sppo.lab6.client.ConnectionToServer;
+import ru.itmo.edu.sppo.lab6.command.BaseCommand;
+import ru.itmo.edu.sppo.lab6.command.Commands;
 import ru.itmo.edu.sppo.lab6.dto.ClientRequest;
 import ru.itmo.edu.sppo.lab6.dto.ClientResponse;
-import ru.itmo.edu.sppo.lab6.dto.collectionitem.MusicBand;
-import ru.itmo.edu.sppo.lab6.exceptions.ExitCommandExceptions;
-import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
-import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryInFileExceptions;
-import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicBand;
+import ru.itmo.edu.sppo.lab6.exceptions.*;
 import ru.itmo.edu.sppo.lab6.utils.CreateMusicBand;
-import ru.itmo.edu.sppo.lab6.utils.ReadProperties;
+import ru.itmo.edu.sppo.lab6.utils.GetAllServerCommands;
 import ru.itmo.edu.sppo.lab6.utils.ValidationMusicBand;
 
 import java.util.*;
 
 @Slf4j
 public class InputHandler {
-    private static final String TIMEOUT_PROPERTIES = "server.timeout";
-    private static final String GET_ALL_COMMANDS = "getAllCommands";
-    private static final String EXIT_COMMAND = "exit";
-    private static final String EXIT_TEXT = "Клиент завершает свою работу. До связи\uD83E\uDD19!";
+    @Getter
+    @Setter
+    private static Scanner scanner;
+    private static final String CLOSE_TEXT = "Сканнер закрылся. Завершение работы";
     private static final String GREETING = "Добро пожаловать!\nМожете выполнить команду -> help, и узнаете все команды";
     private static final String HELP_TEXT =
             "Напишите любую команду из списка. Чтобы посмотреть список команд воспользуйтесь командой -> help";
-    private static final int TIMEOUT;
-    private static final Scanner SCANNER;
     private static final ValidationMusicBand VALIDATION_MUSIC_BAND;
-    private static Map<String, Map<String, Boolean>> serverCommands;
+    private static final Map<String, BaseCommand> CLIENT_COMMAND = new Commands().getAllCommand();
+    private static final Map<String, Map<String, Boolean>> SERVER_COMMANDS;
 
     static {
-        TIMEOUT = Integer.parseInt(new ReadProperties().read(TIMEOUT_PROPERTIES));
-
-        ClientRequest clientRequest = ClientRequest.builder().commandName(GET_ALL_COMMANDS).build();
-        do {
-            serverCommands = (Map<String, Map<String, Boolean>>) new ConnectionToServer()
-                    .interactionWithServer(clientRequest);
-            if (serverCommands == null) {
-                waitStartServer();
-            }
-        } while (serverCommands == null);
-        log.debug("Команды сервера получены");
-
-        VALIDATION_MUSIC_BAND = new ValidationMusicBand(serverCommands.keySet());
-        SCANNER = new Scanner(System.in);
-    }
-
-    private static void waitStartServer() {
-        try {
-            log.warn("Получить команды не удалось, попробуем еще раз через 5 секунд");
-            Thread.sleep(TIMEOUT);
-        } catch (InterruptedException e) {
-            log.error("Невозможно получить команды от сервера");
-        }
+        SERVER_COMMANDS = GetAllServerCommands.getCommands();
+        VALIDATION_MUSIC_BAND = new ValidationMusicBand(SERVER_COMMANDS.keySet());
+        scanner = new Scanner(System.in);
     }
 
     public void startInputHandler() {
         System.out.println(GREETING);
-        while (SCANNER.hasNextLine()) {
+        try {
+            readFromScanner();
+        } catch (IllegalStateException e) {
+            log.debug(CLOSE_TEXT);
+        }
+    }
+
+    public void startInputHandler(Scanner scanner) {
+        InputHandler.setScanner(scanner);
+        try {
+            readFromScanner();
+        } catch (IllegalStateException e) {
+            log.debug(CLOSE_TEXT);
+        }
+    }
+
+    private void readFromScanner() {
+        while (scanner.hasNextLine()) {
             try {
-                new ConnectionToServer().interactionWithServer(createBodyRequest());
+                String[] inputData = scanner.nextLine().split(" ");
+                String commandName = inputData[0];
+                String[] args = Arrays.copyOfRange(inputData, 1, inputData.length);
+
+                if (CLIENT_COMMAND.containsKey(commandName)) {
+                    CLIENT_COMMAND.get(commandName).execute(args);
+                } else {
+                    ClientResponse response = (ClientResponse) new ConnectionToServer()
+                            .interactionWithServer(createBodyRequest(commandName, args));
+                    System.out.print(response.answer());
+                }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
-                System.out.println(e.getMessage());
                 System.out.println(HELP_TEXT);
-            } catch (UnexpectedCommandExceptions | IncorrectDataEntryInFileExceptions
-                     | IncorrectDataEntryExceptions e) {
+            } catch (UnexpectedCommandExceptions | IncorrectDataEntryExceptions e) {
                 System.out.println(e.getMessage());
-            } catch (ExitCommandExceptions e) {
-                System.out.println(e.getMessage());
-                break;
             }
         }
     }
 
-    private ClientRequest createBodyRequest() throws UnexpectedCommandExceptions,
-            IncorrectDataEntryInFileExceptions, IncorrectDataEntryExceptions, ExitCommandExceptions {
+    public static ClientRequest createBodyRequest(String commandName, String[] args) throws UnexpectedCommandExceptions,
+            IncorrectDataEntryExceptions {
         ClientRequest.ClientRequestBuilder clientRequest = ClientRequest.builder();
 
-        String[] inputData = SCANNER.nextLine().split(" ");
-        String commandName = inputData[0];
-
-        if (commandName.equals(EXIT_COMMAND)) {
-            throw new ExitCommandExceptions(EXIT_TEXT);
-        } else if (!serverCommands.containsKey(commandName)) {
+        if (!SERVER_COMMANDS.containsKey(commandName)) {
             throw new NullPointerException();
         }
 
-        if (serverCommands.get(commandName).get("firstGetCommand")) {
-            postServerAdditionalRequest(inputData);
+        if (SERVER_COMMANDS.get(commandName).get("firstGetCommand")) {
+            postServerAdditionalRequest(commandName, args);
         }
-        if (serverCommands.get(commandName).get("transmitObject")) {
-            MusicBand musicBand = new CreateMusicBand(VALIDATION_MUSIC_BAND).create(SCANNER);
+        if (SERVER_COMMANDS.get(commandName).get("transmitObject")) {
+            MusicBand musicBand = new CreateMusicBand(VALIDATION_MUSIC_BAND).create(scanner);
             clientRequest.musicBand(musicBand);
         }
 
         return clientRequest
                 .commandName(commandName)
-                .argument(Arrays.copyOfRange(inputData, 1, inputData.length))
+                .argument(args)
                 .build();
     }
 
-    public void postServerAdditionalRequest(String[] inputData) throws IncorrectDataEntryExceptions {
+    public static void postServerAdditionalRequest(String commandName, String[] args)
+            throws IncorrectDataEntryExceptions {
         ClientResponse additionalCheckArgs = (ClientResponse) new ConnectionToServer()
-                .interactionWithServer(ClientRequest.builder()
-                        .commandName(inputData[0])
-                        .argument(Arrays.copyOfRange(inputData, 1, inputData.length))
-                        .build()
+                .interactionWithServer(
+                        ClientRequest.builder()
+                                .commandName(commandName)
+                                .argument(args)
+                                .build()
                 );
+
         if (additionalCheckArgs.answer() != null && additionalCheckArgs.answer().length() != 0) {
             throw new IncorrectDataEntryExceptions(additionalCheckArgs.answer());
         }

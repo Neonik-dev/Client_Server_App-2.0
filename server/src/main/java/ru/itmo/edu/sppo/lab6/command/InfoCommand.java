@@ -2,7 +2,7 @@ package ru.itmo.edu.sppo.lab6.command;
 
 import ru.itmo.edu.sppo.lab6.dto.ClientRequest;
 import ru.itmo.edu.sppo.lab6.dto.ClientResponse;
-import ru.itmo.edu.sppo.lab6.dto.collectionitem.MusicBand;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicBand;
 import ru.itmo.edu.sppo.lab6.storage.MusicBandCollection;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.utils.Printer;

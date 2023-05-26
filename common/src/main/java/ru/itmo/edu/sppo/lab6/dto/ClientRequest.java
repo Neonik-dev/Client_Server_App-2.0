@@ -3,7 +3,7 @@ package ru.itmo.edu.sppo.lab6.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import ru.itmo.edu.sppo.lab6.dto.collectionitem.MusicBand;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicBand;
 
 import java.io.Serializable;
 

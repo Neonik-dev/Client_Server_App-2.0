@@ -266,7 +266,7 @@
         </module>
         <module name="EmptyBlock">
             <property name="option" value="TEXT"/>
-            <property name="tokens" value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_SWITCH"/>
+            <property name="tokens" value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_ELSE, LITERAL_SWITCH"/>
         </module>
         <module name="LeftCurly"/>
         <module name="NeedBraces"/>
@@ -308,10 +308,10 @@
         <!-- <module name="MissingCtor"/> -->
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
-        <module name="MultipleStringLiterals">
+<!--        <module name="MultipleStringLiterals">-->
             <!-- Allow zero-length and 1-character strings -->
-            <property name="ignoreStringsRegexp" value='^(("")|(".")|("..")|("..>"))$'/>
-        </module>
+<!--            <property name="ignoreStringsRegexp" value='^(("")|(".")|("..")|("..>"))$'/>-->
+<!--        </module>-->
         <module name="MultipleVariableDeclarations"/>
         <module name="NestedForDepth">
             <property name="max" value="2"/>

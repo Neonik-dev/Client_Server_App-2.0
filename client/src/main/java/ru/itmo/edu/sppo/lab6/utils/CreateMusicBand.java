@@ -1,7 +1,7 @@
 package ru.itmo.edu.sppo.lab6.utils;
 
-import ru.itmo.edu.sppo.lab6.dto.collectionitem.MusicBand;
-import ru.itmo.edu.sppo.lab6.dto.collectionitem.MusicGenre;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicBand;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicGenre;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 
@@ -16,7 +16,6 @@ public class CreateMusicBand {
     }
 
     public MusicBand create(Scanner inputScanner) throws UnexpectedCommandExceptions {
-
         MusicBand musicBand = new MusicBand();
 
         while (true) {

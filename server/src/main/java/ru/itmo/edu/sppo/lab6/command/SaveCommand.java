@@ -1,6 +1,6 @@
 package ru.itmo.edu.sppo.lab6.command;
 
-import ru.itmo.edu.sppo.lab6.document.WriteXmlFile;
+import ru.itmo.edu.sppo.lab6.document.WriteXml;
 import ru.itmo.edu.sppo.lab6.dto.ClientRequest;
 import ru.itmo.edu.sppo.lab6.dto.ClientResponse;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
@@ -12,7 +12,7 @@ import javax.xml.stream.XMLStreamException;
 public class SaveCommand implements BaseCommand {
     private static final String NAME = "save";
     private static final String SUCCESS = "Сохрание в файл прошло успешно";
-    private final WriteXmlFile writer = new WriteXmlFile();
+    private final WriteXml writer = new WriteXml();
 
     @Override
     public String getCommandName() {
