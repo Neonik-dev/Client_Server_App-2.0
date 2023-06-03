@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ListMusicBand>
+    <MusicBand>
+        <id>1</id>
+        <name>Король и Шут</name>
+        <coordinates>
+            <x>1</x>
+            <y>2</y>
+        </coordinates>
+        <creationDate>2018-11-11</creationDate>
+        <numberOfParticipants>5</numberOfParticipants>
+        <description>«Король и Шут» (сокращённо «КиШ») — советская и российская хоррор-панк-группа из Санкт-Петербурга. Группа была образована в Ленинграде в 1988 году.</description>
+        <establishmentDate>01.01.1988</establishmentDate>
+        <genre>PUNK_ROCK</genre>
+        <studio>
+            <address>Санкт-Петербург</address>
+        </studio>
+    </MusicBand>
+    <MusicBand>
+        <id>2</id>
+        <name>Ленинград</name>
+        <coordinates>
+            <x>3.0</x>
+            <y>4</y>
+        </coordinates>
+        <creationDate>2023-01-11</creationDate>
+        <numberOfParticipants>16</numberOfParticipants>
+        <description>Российская музыкальная группа из Санкт-Петербурга, созданная Сергеем Шнуровым.</description>
+        <establishmentDate>09.01.1997</establishmentDate>
+        <genre>PROGRESSIVE_ROCK</genre>
+        <studio>
+            <address>Санкт-Петербург</address>
+        </studio>
+    </MusicBand>
+    <MusicBand>
+        <id>3</id>
+        <name>Сплин</name>
+        <coordinates>
+            <x>14.5</x>
+            <y>4</y>
+        </coordinates>
+        <creationDate>2023-02-19</creationDate>
+        <numberOfParticipants>14</numberOfParticipants>
+        <description>Российская рок-группа из Санкт-Петербурга. Бессменный лидер - Александр Васильев.</description>
+        <establishmentDate>27.05.1994</establishmentDate>
+        <genre>PROGRESSIVE_ROCK</genre>
+        <studio>
+            <address>Санкт-Петербург</address>
+        </studio>
+    </MusicBand>
+</ListMusicBand>

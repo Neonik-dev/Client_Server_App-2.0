@@ -1,4 +1,4 @@
-package ru.itmo.edu.sppo.lab6.dto.collectionitem;
+package ru.itmo.edu.sppo.lab6.dto.collectionItem;
 
 import lombok.ToString;
 

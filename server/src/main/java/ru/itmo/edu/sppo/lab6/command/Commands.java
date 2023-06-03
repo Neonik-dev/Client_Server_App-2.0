@@ -57,7 +57,6 @@ public class Commands {
     }
 
     public Map<String, BaseCommand> getAllCommand() {
-        return COMMANDS.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return COMMANDS.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

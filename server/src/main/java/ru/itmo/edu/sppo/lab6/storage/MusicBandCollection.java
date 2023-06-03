@@ -1,7 +1,7 @@
 package ru.itmo.edu.sppo.lab6.storage;
 
 import ru.itmo.edu.sppo.lab6.command.Commands;
-import ru.itmo.edu.sppo.lab6.dto.collectionitem.MusicBand;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicBand;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryInFileExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
@@ -61,7 +61,12 @@ public class MusicBandCollection {
         generatePrivateFields(musicBand);
         VALIDATION_MUSIC_BAND.checkMusicBand(musicBand);
         MUSIC_BAND_COLLECTION.add(musicBand);
-//            WalWriter.openFile("add" + "\n" + newInstance.rawData());
+    }
+
+    public static void addFromServerFile(MusicBand musicBand) throws IncorrectDataEntryInFileExceptions {
+        checkDuplicateID(musicBand.getId());
+        ALL_ID.add(musicBand.getId());
+        MUSIC_BAND_COLLECTION.add(musicBand);
     }
 
     public static void show(Printer printer) {

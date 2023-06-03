@@ -1,15 +1,17 @@
 package ru.itmo.edu.sppo.lab6.utils;
 
-import ru.itmo.edu.sppo.lab6.dto.collectionitem.Coordinates;
-import ru.itmo.edu.sppo.lab6.dto.collectionitem.MusicBand;
-import ru.itmo.edu.sppo.lab6.dto.collectionitem.MusicGenre;
-import ru.itmo.edu.sppo.lab6.dto.collectionitem.Studio;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.Coordinates;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicBand;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicGenre;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.Studio;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectLongTypeExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Date;
@@ -23,8 +25,12 @@ public class ValidationMusicBand {
     }
 
     public void checkMusicBand(MusicBand musicBand) throws UnexpectedCommandExceptions, IncorrectDataEntryExceptions {
+        validateId(musicBand.getId());
         validateName(musicBand.getName());
+        validateNumberOfParticipants(musicBand.getNumberOfParticipants());
+        validateCoordinates(musicBand.getCoordinates());
         validateDescription(musicBand.getDescription());
+        validateEstablishmentDate(musicBand.getEstablishmentDate());
         validateGenre(musicBand.getGenre().name());
         validateStudio(musicBand.getStudio().getAddress());
     }
@@ -34,6 +40,7 @@ public class ValidationMusicBand {
             throw new IncorrectDataEntryExceptions("Поле id не может быть пустым");
         }
         checkCommand(rawId);
+
         String errorMessage;
         try {
             int id = Integer.parseInt(rawId);
@@ -80,7 +87,16 @@ public class ValidationMusicBand {
         throw new IncorrectDataEntryExceptions(errorMessage);
     }
 
-    public void validateCreationDate() {
+    public Coordinates validateCoordinates(Coordinates coordinates) {
+        return coordinates;
+    }
+
+    public LocalDate validateCreationDate(String creationDate) throws IncorrectDataEntryExceptions {
+        try {
+            return LocalDate.parse(creationDate);
+        } catch (DateTimeParseException e) {
+            throw new IncorrectDataEntryExceptions(e.getMessage());
+        }
     }
 
     public Long validateNumberOfParticipants(String number)
@@ -90,17 +106,20 @@ public class ValidationMusicBand {
         }
         checkCommand(number);
 
-        String errorMessage;
         try {
-            long parseNumber = CheckLongType.checkLong(number);
-            if (parseNumber > 0) {
-                return parseNumber;
-            }
-            errorMessage = NUMBER_MUST_MORE_ZERO_TEXT;
+            return validateNumberOfParticipants(CheckLongType.checkLong(number));
         } catch (IncorrectLongTypeExceptions e) {
-            errorMessage = e.getMessage();
+            throw new IncorrectDataEntryExceptions(e.getMessage());
         }
-        throw new IncorrectDataEntryExceptions(errorMessage);
+    }
+
+    public Long validateNumberOfParticipants(Long number)
+            throws IncorrectDataEntryExceptions {
+        if (number == null || number > 0) {
+            return number;
+        } else {
+            throw new IncorrectDataEntryExceptions(NUMBER_MUST_MORE_ZERO_TEXT);
+        }
     }
 
     public String validateDescription(String description)
@@ -123,17 +142,20 @@ public class ValidationMusicBand {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         dateFormat.setLenient(false);
         try {
-            Date inputDate = dateFormat.parse(rawDate);
-            if (inputDate.before(new Date())) {
-                return inputDate;
-            }
-            errorMessage = "Укажите дату, меньше текущей";
+            return validateEstablishmentDate(dateFormat.parse(rawDate));
         } catch (ParseException e) {
             errorMessage = "К сожалению, дата в неправильном формате";
         } catch (IllegalArgumentException e) {
             errorMessage = e.getMessage();
         }
         throw new IncorrectDataEntryExceptions(errorMessage);
+    }
+
+    public Date validateEstablishmentDate(Date establishmentDate) throws IncorrectDataEntryExceptions {
+        if (establishmentDate.before(new Date())) {
+            return establishmentDate;
+        }
+        throw new IncorrectDataEntryExceptions("Укажите дату, меньше текущей");
     }
 
     public MusicGenre validateGenre(String genre) throws UnexpectedCommandExceptions, IncorrectDataEntryExceptions {

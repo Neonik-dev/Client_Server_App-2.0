@@ -20,9 +20,7 @@ public class GetFromServer {
         } catch (ClassNotFoundException e) {
             log.error("От сервера пришел неизвестный объект");
         }
-
-        log.debug("Клиент получил от сервера следующее: ");
-        System.out.println(response.toString());
+        log.debug("Клиент получил сообщение от сервера");
         return response;
     }
 }
