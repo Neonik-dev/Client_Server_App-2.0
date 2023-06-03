@@ -65,6 +65,7 @@ public class MusicBandCollection {
 
     public static void addFromServerFile(MusicBand musicBand) throws IncorrectDataEntryInFileExceptions {
         checkDuplicateID(musicBand.getId());
+        ALL_ID.add(musicBand.getId());
         MUSIC_BAND_COLLECTION.add(musicBand);
     }
 

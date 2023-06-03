@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class ExecuteScriptCommand implements BaseCommand {
+    private static int recursionCount = 0;
+    private static final int MAX_RECURSION = 5;
     private static final String NAME = "execute_script";
 
     @Override
@@ -26,11 +28,22 @@ public class ExecuteScriptCommand implements BaseCommand {
     public void execute(String[] args) throws IncorrectDataEntryExceptions {
         try {
             checkArgs(args);
+            checkRecursion();
             Scanner keepOldScanner = InputHandler.getScanner();
             new InputHandler().startInputHandler(new Scanner(new BufferedInputStream(new FileInputStream(args[0]))));
             InputHandler.setScanner(keepOldScanner);
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void checkRecursion() {
+        recursionCount++;
+        if (recursionCount > MAX_RECURSION) {
+            recursionCount--;
+            throw new IllegalStateException(
+                    String.format("Вложенность execute_script превышает заданный лимит=(%d)!", MAX_RECURSION)
+            );
         }
     }
 

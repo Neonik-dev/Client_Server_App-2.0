@@ -11,6 +11,7 @@ import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Date;
@@ -90,8 +91,12 @@ public class ValidationMusicBand {
         return coordinates;
     }
 
-    public LocalDate validateCreationDate(String creationDate) {
-        return LocalDate.parse(creationDate);
+    public LocalDate validateCreationDate(String creationDate) throws IncorrectDataEntryExceptions {
+        try {
+            return LocalDate.parse(creationDate);
+        } catch (DateTimeParseException e) {
+            throw new IncorrectDataEntryExceptions(e.getMessage());
+        }
     }
 
     public Long validateNumberOfParticipants(String number)
