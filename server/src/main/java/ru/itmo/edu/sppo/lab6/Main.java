@@ -6,6 +6,7 @@ import ru.itmo.edu.sppo.lab6.server.Server;
 import javax.xml.stream.XMLStreamException;
 
 public class Main {
+    private static final String INPUT_FILE_NAME_FROM_ENV = "INPUT_FILE";
     private Main() {
     }
 
@@ -18,8 +19,7 @@ public class Main {
 
     private static void readCollection() {
         try {
-//            new ReadXml().readFile(System.getenv().get("INPUT_FILE"));
-            new ReadXml().readFile("MusicBand.xml");
+            new ReadXml().readFile(System.getenv().get(INPUT_FILE_NAME_FROM_ENV));
         } catch (XMLStreamException e) {
             System.out.println("Не удалось закрыть соединение с файлом");
         } catch (NullPointerException e) {
