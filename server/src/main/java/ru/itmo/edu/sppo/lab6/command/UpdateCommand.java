@@ -29,13 +29,6 @@ public class UpdateCommand implements BaseCommand {
         return NAME + " id -> обновляет значение элемента коллекции, id которого равен заданному";
     }
 
-//    @Override
-//    public void execute(String[] args) throws IncorrectDataEntryExceptions {
-//        checkArgs(args);
-//        int id = Integer.parseInt(args[0]);
-//        new MusicBandLinkedList().update(id);
-//    }
-
     @Override
     public Map<String, Boolean> getDetailsFromClient() {
         Map<String, Boolean> details = GetServerCommands.getTemplateDetails();

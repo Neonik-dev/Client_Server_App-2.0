@@ -40,9 +40,8 @@ public class GetClientDTO {
             Timeout.tcpTimeout();
             readTcpPackage(outputStream);
 
-            try (
-                    ByteArrayInputStream input = new ByteArrayInputStream(outputStream.toByteArray());
-                    ObjectInputStream ois = new ObjectInputStream(input)
+            try (ByteArrayInputStream input = new ByteArrayInputStream(outputStream.toByteArray());
+                 ObjectInputStream ois = new ObjectInputStream(input)
             ) {
                 response = (ClientRequest) ois.readObject();
                 log.debug("Сервер получил от клиента следующее: " + response.toString());

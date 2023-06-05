@@ -7,13 +7,12 @@ import java.io.IOException;
 import java.net.Socket;
 
 @Slf4j
-public class ConnectionToServer {
-    private static final String ERROR_MESSAGE = "Что-то пошло не так, попробуйте снова";
+public class ConnectionToServer implements AutoCloseable {
     private static final String HOST_PROPERTIES = "server.host";
     private static final String PORT_PROPERTIES = "server.port";
     private Socket clientSocket;
 
-    public void startConnection() throws IOException {
+    public Socket startConnection() throws IOException {
         log.debug("Подключаемся к серверу");
 
         String host = new ReadProperties().read(HOST_PROPERTIES);
@@ -21,26 +20,11 @@ public class ConnectionToServer {
         clientSocket = new Socket(host, port);
 
         log.debug("Подключение к серверу прошло успешно");
+        return clientSocket;
     }
 
-    public Object interactionWithServer(Object request) {
-        Object response = null;
-        SendToServer sender = new SendToServer();
-        try {
-            startConnection();
-            sender.send(request, clientSocket);
-            response = GetFromServer.get(clientSocket);
-
-            sender.stopOutputConnection();
-            stopConnection();
-        } catch (IOException e) {
-            log.error("Ошибка при отправке на сервер: " + e.getMessage());
-            System.out.println(ERROR_MESSAGE);
-        }
-        return response;
-    }
-
-    public void stopConnection() throws IOException {
+    @Override
+    public void close() throws Exception {
         clientSocket.close();
     }
 }

@@ -16,7 +16,7 @@ public class HistoryCommand implements BaseCommand {
 
     @Override
     public String getCommandDescription() {
-        return NAME + " -> выводит последние" + HistoryStorage.STORAGE_SIZE + "команд (без их аргументов)";
+        return NAME + " -> выводит последние " + HistoryStorage.STORAGE_SIZE + " команд (без их аргументов)";
     }
 
     @Override

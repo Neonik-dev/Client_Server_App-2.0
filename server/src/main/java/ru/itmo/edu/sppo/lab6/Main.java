@@ -7,6 +7,7 @@ import javax.xml.stream.XMLStreamException;
 
 public class Main {
     private static final String INPUT_FILE_NAME_FROM_ENV = "INPUT_FILE";
+
     private Main() {
     }
 

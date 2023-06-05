@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 @Slf4j
-public class SendToServer {
+public class SendToServer implements AutoCloseable {
     private ObjectOutputStream output;
 
     public void send(Object request, Socket clientSocket) throws IOException {
@@ -16,7 +16,7 @@ public class SendToServer {
         output.writeObject(request);
     }
 
-    public void stopOutputConnection() throws IOException {
+    public void close() throws IOException {
         output.close();
     }
 }

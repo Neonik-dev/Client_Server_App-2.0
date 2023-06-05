@@ -17,6 +17,12 @@ public class Commands {
 
             BaseCommand helpCommand = new HelpCommand();
             COMMANDS.put(helpCommand.getCommandName(), helpCommand);
+
+            BaseCommand authorizationCommand = new AuthorizationCommand();
+            COMMANDS.put(authorizationCommand.getCommandName(), authorizationCommand);
+
+            BaseCommand registrationCommand = new RegistrationCommand();
+            COMMANDS.put(registrationCommand.getCommandName(), registrationCommand);
         }
     }
 

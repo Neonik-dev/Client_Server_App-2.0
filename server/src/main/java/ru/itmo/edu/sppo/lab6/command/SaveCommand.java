@@ -27,7 +27,6 @@ public class SaveCommand implements BaseCommand {
     @Override
     public ClientResponse execute(ClientRequest request, Printer printer) throws IncorrectDataEntryExceptions,
             UnexpectedCommandExceptions {
-        checkArgs(request.getArgument());
         try {
             writer.writeFile(printer);
             printer.println(SUCCESS);
