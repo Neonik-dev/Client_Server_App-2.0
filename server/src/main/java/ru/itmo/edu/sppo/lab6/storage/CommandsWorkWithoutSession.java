@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CommandsWorkWithoutSession {
-    private static final Set<String> commands = Stream.of(
+    private static final Set<String> COMMANDS = Stream.of(
             new RegistrationCommand().getCommandName(),
             new AuthorizationCommand().getCommandName()
     ).collect(Collectors.toSet());
@@ -17,6 +17,6 @@ public class CommandsWorkWithoutSession {
     }
 
     public static Set<String> getCommands() {
-        return commands;
+        return COMMANDS;
     }
 }

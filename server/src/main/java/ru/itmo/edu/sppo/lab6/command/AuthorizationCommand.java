@@ -22,7 +22,8 @@ public class AuthorizationCommand implements BaseCommand {
     }
 
     @Override
-    public ClientResponse execute(ClientRequest request, Printer printer) throws IncorrectDataEntryExceptions, UnexpectedCommandExceptions {
+    public ClientResponse execute(ClientRequest request, Printer printer) throws IncorrectDataEntryExceptions,
+            UnexpectedCommandExceptions {
         checkArgs(request.getArgument());
         return new ClientResponse(GenerateSession.generate());
     }
