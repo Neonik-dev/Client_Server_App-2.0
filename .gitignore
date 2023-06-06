@@ -13,3 +13,4 @@
 output.xml
 execute_script.txt
 MusicBand.xml
+server/src/main/resources/database.properties

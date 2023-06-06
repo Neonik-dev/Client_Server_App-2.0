@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 
 @Slf4j
-public class Server {
+public class Server implements AutoCloseable {
     private static final String PORT_PROPERTIES = "server.port";
     private ServerSocketChannel serverSocketChannel;
     private final int port;
@@ -31,11 +31,12 @@ public class Server {
         } catch (IOException e) {
             log.error(e.getMessage());
             e.getStackTrace();
-            stop();
+            close();
         }
     }
 
-    public void stop() {
+    @Override
+    public void close() {
         try {
             serverSocketChannel.close();
         } catch (IOException e) {

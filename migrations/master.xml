@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="scripts/sql/2023-06-05_1_create_user_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-05_2_create_genre_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-05_3_create_music_band_table.sql" relativeToChangelogFile="true"/>
+</databaseChangeLog>
