@@ -13,6 +13,9 @@ public class ReadProperties {
     private static final String NAME_PROPERTIES = "server.properties";
     private static final Pattern ENV_TEMPLATE = Pattern.compile("^\\$\\{(.*)}$");
 
+    private ReadProperties() {
+    }
+
     public static String read(String address) {
         try (InputStream inputStream = ReadProperties.class.getClassLoader().getResourceAsStream(NAME_PROPERTIES)) {
             Properties properties = new Properties();

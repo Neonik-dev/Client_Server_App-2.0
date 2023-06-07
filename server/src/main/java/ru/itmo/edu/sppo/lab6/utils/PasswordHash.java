@@ -12,6 +12,9 @@ public class PasswordHash {
         SALT = ReadProperties.read(PROPERTY_PATH_SALT);
     }
 
+    private PasswordHash() {
+    }
+
     public static String generateHashSha384(String password) {
         return new HmacUtils(HmacAlgorithms.HMAC_SHA_384, SALT).hmacHex(password);
     }
