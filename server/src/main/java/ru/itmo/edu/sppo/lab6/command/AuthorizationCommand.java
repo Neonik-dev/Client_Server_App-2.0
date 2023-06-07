@@ -10,6 +10,7 @@ import ru.itmo.edu.sppo.lab6.exceptions.AuthorizationException;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 import ru.itmo.edu.sppo.lab6.utils.GenerateSession;
+import ru.itmo.edu.sppo.lab6.utils.PasswordHash;
 import ru.itmo.edu.sppo.lab6.utils.Printer;
 
 import java.sql.SQLException;
@@ -38,7 +39,7 @@ public class AuthorizationCommand implements BaseCommand {
         checkArgs(args);
         String session = GenerateSession.generate();
         try {
-            USER_SERVICE.authorization(args[0], args[1], session);
+            USER_SERVICE.authorization(args[0], PasswordHash.generateHashSha384(args[1]), session);
         } catch (SQLException e) {
             throw new AuthorizationException(e.getMessage());
         }

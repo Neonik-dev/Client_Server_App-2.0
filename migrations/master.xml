@@ -8,4 +8,5 @@
     <include file="scripts/sql/2023-06-05_2_create_genre_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/sql/2023-06-05_3_create_music_band_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/sql/2023-06-06_4_create_user_session_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-07_5_alter_users_set_password_length.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
