@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset g.liseychikov:1_create_user_table
+--changeset g.liseychikov:1_create_users_table
 CREATE TABLE IF NOT EXISTS users
 (
     id                  SERIAL                          PRIMARY KEY,

@@ -1,4 +1,4 @@
-package ru.itmo.edu.sppo.lab6.repository;
+package ru.itmo.edu.sppo.lab6.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -19,6 +19,9 @@ public class DataSource {
         DATA_SOURCE = new HikariDataSource(config);
     }
 
+    private DataSource() {
+    }
+
     private static Properties readProperties() {
         try {
             Properties properties = new Properties();
@@ -30,9 +33,6 @@ public class DataSource {
             log.error("Проблема с файлом database.properties");
             throw new RuntimeException(e);
         }
-    }
-
-    private DataSource() {
     }
 
     public static Connection getConnection() throws SQLException {

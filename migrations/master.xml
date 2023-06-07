@@ -4,7 +4,8 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <include file="scripts/sql/2023-06-05_1_create_user_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-05_1_create_users_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/sql/2023-06-05_2_create_genre_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/sql/2023-06-05_3_create_music_band_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-06_4_create_user_session_table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

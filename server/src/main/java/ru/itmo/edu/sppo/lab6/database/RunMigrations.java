@@ -1,4 +1,4 @@
-package ru.itmo.edu.sppo.lab6.repository;
+package ru.itmo.edu.sppo.lab6.database;
 
 import liquibase.Contexts;
 import liquibase.LabelExpression;
@@ -23,8 +23,9 @@ public class RunMigrations {
     }
 
     public static void run() {
-        try (Connection conn = DataSource.getConnection()) {
-            PostgresDatabase database = new PostgresDatabase();
+        try (Connection conn = DataSource.getConnection();
+             PostgresDatabase database = new PostgresDatabase()
+        ) {
             database.setConnection(new JdbcConnection(conn));
             ResourceAccessor changelogDir = new DirectoryResourceAccessor(PROJECT_PATH.resolve("migrations"));
             Liquibase liquibase = new Liquibase("master.xml", changelogDir, database);

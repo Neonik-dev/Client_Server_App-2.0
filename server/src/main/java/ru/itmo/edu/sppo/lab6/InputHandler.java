@@ -34,17 +34,17 @@ public class InputHandler {
             return choiceCommand(request, printer);
         } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
             printer.println(RECOMMENDATION_HELP_COMMAND);
-        } catch (IncorrectDataEntryExceptions | UnexpectedCommandExceptions e) {
-            printer.println(e.getMessage());
         } catch (AuthorizationException e) {
             printer.println(e.getMessage());
             exception = e.getClass().getSimpleName();
+        } catch (IncorrectDataEntryExceptions | UnexpectedCommandExceptions e) {
+            printer.println(e.getMessage());
         }
         return new ClientResponse(printer.toString(), exception);
     }
 
     private static Object choiceCommand(ClientRequest request, Printer printer) throws UnexpectedCommandExceptions,
-            IncorrectDataEntryExceptions, AuthorizationException {
+            IncorrectDataEntryExceptions {
         BaseCommand command = COMMANDS.get(request.getCommandName());
         if (request.getCommandName().equals(GET_ALL_COMMANDS)) {
             return GetServerCommands.getDetails();
