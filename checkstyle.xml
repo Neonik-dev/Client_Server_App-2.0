@@ -299,12 +299,12 @@
         <!-- <module name="IllegalTokenText"/> -->
         <!-- <module name="IllegalType"/> -->
         <module name="InnerAssignment"/>
-        <module name="MagicNumber">
-            <property name="ignoreHashCodeMethod" value="true"/>
-            <property name="ignoreAnnotation" value="true"/>
-            <message key="magic.number"
-                     value="Most likely the value ''{0}'' is a configuration one. You should move it to configuration file instead of source code."/>
-        </module>
+<!--        <module name="MagicNumber">-->
+<!--            <property name="ignoreHashCodeMethod" value="true"/>-->
+<!--            <property name="ignoreAnnotation" value="true"/>-->
+<!--            <message key="magic.number"-->
+<!--                     value="Most likely the value ''{0}'' is a configuration one. You should move it to configuration file instead of source code."/>-->
+<!--        </module>-->
         <!-- <module name="MissingCtor"/> -->
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>

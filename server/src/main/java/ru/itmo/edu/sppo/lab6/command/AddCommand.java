@@ -24,7 +24,7 @@ public class AddCommand implements BaseCommand {
     private static final boolean TRANSMIT_OBJECT = true;
     private static final String NAME = "add";
     private static final MusicBandService MUSIC_BAND_SERVICE = new JdbcMusicBandService(
-            new JdbcUsersRepository(), new JdbcMusicBandRepository(), new JdbcGenreRepository()
+            new JdbcUsersRepository(), new JdbcMusicBandRepository(new JdbcGenreRepository()), new JdbcGenreRepository()
     );
 
     @Override

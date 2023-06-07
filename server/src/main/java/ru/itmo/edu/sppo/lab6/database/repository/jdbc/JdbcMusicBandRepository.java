@@ -11,18 +11,22 @@ import java.sql.*;
 import java.util.Optional;
 
 public class JdbcMusicBandRepository implements MusicBandRepository {
-    private static final String INSERT_QUERY = "INSERT INTO music_band(name, coordinate_x, coordinate_y, " +
-            "number_of_participants, description, establishment_date, genre_id, studio_address) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String SELECT_BY_ID_QUERY = "SELECT id, name, coordinate_x, coordinate_y, " +
-            "creation_date,  number_of_participants, description, establishment_date, genre_id, studio_address " +
-            "FROM music_band WHERE id=?";
-    private static final GenreRepository genreRepository = new JdbcGenreRepository();
+    private static final String INSERT_QUERY = "INSERT INTO music_band(name, coordinate_x, coordinate_y, "
+            + "number_of_participants, description, establishment_date, genre_id, studio_address) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SELECT_BY_ID_QUERY = "SELECT id, name, coordinate_x, coordinate_y, "
+            + "creation_date,  number_of_participants, description, establishment_date, genre_id, studio_address "
+            + "FROM music_band WHERE id=?";
+    private final GenreRepository genreRepository;
+
+    public JdbcMusicBandRepository(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
+    }
 
     @Override
     public int add(Connection conn, MusicBand musicBand, int genreId) throws SQLException {
         try (var statement = conn.prepareStatement(INSERT_QUERY, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            ConvertMusicBandToDB(statement, musicBand, genreId);
+            convertMusicBandToDB(statement, musicBand, genreId);
             statement.execute();
 
             ResultSet resultSet = statement.getGeneratedKeys();
@@ -31,7 +35,7 @@ public class JdbcMusicBandRepository implements MusicBandRepository {
         }
     }
 
-    private void ConvertMusicBandToDB(PreparedStatement statement, MusicBand musicBand, int genreId)
+    private void convertMusicBandToDB(PreparedStatement statement, MusicBand musicBand, int genreId)
             throws SQLException {
         statement.setString(1, musicBand.getName());
         statement.setDouble(2, musicBand.getCoordinates().x());
@@ -61,11 +65,11 @@ public class JdbcMusicBandRepository implements MusicBandRepository {
                 throw new SQLException("Нет ни одной MusicBand с таким id");
             }
 
-            return ConvertResultSetToMusicBand(conn, result);
+            return convertResultSetToMusicBand(conn, result);
         }
     }
 
-    private MusicBand ConvertResultSetToMusicBand(Connection conn, ResultSet result) throws SQLException {
+    private MusicBand convertResultSetToMusicBand(Connection conn, ResultSet result) throws SQLException {
         MusicBand musicBand = new MusicBand();
         musicBand.setId(result.getInt("id"));
         musicBand.setName(result.getString("name"));
