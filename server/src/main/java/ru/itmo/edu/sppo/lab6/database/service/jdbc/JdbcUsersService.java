@@ -4,6 +4,7 @@ import ru.itmo.edu.sppo.lab6.database.DataSource;
 import ru.itmo.edu.sppo.lab6.database.repository.repository.UserSessionRepository;
 import ru.itmo.edu.sppo.lab6.database.repository.repository.UsersRepository;
 import ru.itmo.edu.sppo.lab6.database.service.service.UsersService;
+import ru.itmo.edu.sppo.lab6.exceptions.AuthorizationException;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -29,6 +30,14 @@ public class JdbcUsersService implements UsersService {
     }
 
     @Override
-    public void authorization(String login, String password) {
+    public void authorization(String login, String password, String session)
+            throws AuthorizationException, SQLException {
+        try (Connection conn = DataSource.getConnection()) {
+            conn.setAutoCommit(false);
+            int userId = usersRepository.getIdByLoginAndPassword(conn, login, password);
+            userSessionRepository.deleteByUserId(conn, userId);
+            userSessionRepository.add(conn, session, userId);
+            conn.commit();
+        }
     }
 }

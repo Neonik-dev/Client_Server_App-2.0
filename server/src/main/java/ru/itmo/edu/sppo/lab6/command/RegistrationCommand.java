@@ -19,7 +19,7 @@ import java.sql.SQLException;
 public class RegistrationCommand implements BaseCommand {
     private static final String NAME = "registration";
     private static final String ERROR_MESSAGE_COUNT_ARGS = "Для этой команды необходимо 2 аргумента: логин и пароль";
-    private static final UsersService usersService = new JdbcUsersService(
+    private static final UsersService USERS_SERVICE = new JdbcUsersService(
             new JdbcUsersRepository(), new JdbcUserSessionRepository()
     );
 
@@ -36,11 +36,11 @@ public class RegistrationCommand implements BaseCommand {
     @Override
     public ClientResponse execute(ClientRequest request, Printer printer) throws IncorrectDataEntryExceptions,
             UnexpectedCommandExceptions {
-        checkArgs(request.getArgument());
+        String[] args = request.getArgument();
+        checkArgs(args);
         String session = GenerateSession.generate();
         try {
-            String[] args = request.getArgument();
-            usersService.register(args[0], args[1], session);
+            USERS_SERVICE.register(args[0], args[1], session);
         } catch (SQLException e) {
             throw new AuthorizationException(e.getMessage());
         }

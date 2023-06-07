@@ -36,7 +36,7 @@ public class AuthorizationCommand implements BaseCommand {
             InputHandler.setSession(response.answer());
             System.out.printf("Пользователь %s успешно авторизовался%n", args[0]);
         } else {
-            System.out.printf("Авторизация не удалась (details = %s)%n", response.answer());
+            System.out.printf("Авторизация не удалась (details) = %s", response.answer());
         }
     }
 
