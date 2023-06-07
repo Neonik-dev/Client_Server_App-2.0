@@ -7,14 +7,12 @@ import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 import ru.itmo.edu.sppo.lab6.utils.ValidationMusicBand;
 import ru.itmo.edu.sppo.lab6.utils.Printer;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class MusicBandCollection {
-    private static final ValidationMusicBand VALIDATION_MUSIC_BAND;
+    public static final ValidationMusicBand VALIDATION_MUSIC_BAND;
     private static final HashSet<Integer> ALL_ID = new HashSet<>();
-    private static int idForMusicBand = 0;
     private static final LinkedList<MusicBand> MUSIC_BAND_COLLECTION = new LinkedList<>();
     private static final Date DATE_CREATED = new Date();
 
@@ -38,27 +36,13 @@ public class MusicBandCollection {
         ALL_ID.clear();
     }
 
-    private static int generatorId() {
-        while (ALL_ID.contains(++idForMusicBand)) {
-        }
-        ALL_ID.add(idForMusicBand);
-        return idForMusicBand;
-    }
-
-    private static void generatePrivateFields(MusicBand musicBand) {
-        musicBand.setId(generatorId());
-        musicBand.setCreationDate(LocalDate.now());
-    }
-
     private static void checkDuplicateID(int id) throws IncorrectDataEntryInFileExceptions {
         if (ALL_ID.contains(id)) {
             throw new IncorrectDataEntryInFileExceptions("Такой id уже существует");
         }
     }
 
-    public static void add(MusicBand musicBand) throws IncorrectDataEntryExceptions, UnexpectedCommandExceptions {
-        generatePrivateFields(musicBand);
-        VALIDATION_MUSIC_BAND.checkMusicBand(musicBand);
+    public static void add(MusicBand musicBand) {
         MUSIC_BAND_COLLECTION.add(musicBand);
     }
 

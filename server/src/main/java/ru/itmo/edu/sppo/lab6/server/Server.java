@@ -14,9 +14,7 @@ public class Server implements AutoCloseable {
     private final int port;
 
     public Server() {
-        port = Integer.parseInt(
-                new ReadProperties().read(PORT_PROPERTIES)
-        );
+        port = Integer.parseInt(ReadProperties.read(PORT_PROPERTIES));
     }
 
     public void start() {

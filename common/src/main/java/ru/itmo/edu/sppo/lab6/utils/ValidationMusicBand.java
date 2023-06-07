@@ -17,7 +17,6 @@ import java.util.Set;
 import java.util.Date;
 
 public class ValidationMusicBand {
-    private static final String NUMBER_MUST_MORE_ZERO_TEXT = "Число должно быть больше 0";
     private final Set<String> commandsName;
 
     public ValidationMusicBand(Set<String> commandsName) {
@@ -25,7 +24,6 @@ public class ValidationMusicBand {
     }
 
     public void checkMusicBand(MusicBand musicBand) throws UnexpectedCommandExceptions, IncorrectDataEntryExceptions {
-        validateId(musicBand.getId());
         validateName(musicBand.getName());
         validateNumberOfParticipants(musicBand.getNumberOfParticipants());
         validateCoordinates(musicBand.getCoordinates());
@@ -53,7 +51,7 @@ public class ValidationMusicBand {
 
     public int validateId(int id) throws IncorrectDataEntryExceptions {
         if (id <= 0) {
-            throw new IncorrectDataEntryExceptions(NUMBER_MUST_MORE_ZERO_TEXT);
+            throw new IncorrectDataEntryExceptions("Id должен быть больше 0");
         }
         return id;
     }
@@ -118,7 +116,7 @@ public class ValidationMusicBand {
         if (number == null || number > 0) {
             return number;
         } else {
-            throw new IncorrectDataEntryExceptions(NUMBER_MUST_MORE_ZERO_TEXT);
+            throw new IncorrectDataEntryExceptions("number_of_participants должно быть больше 0");
         }
     }
 
@@ -152,7 +150,7 @@ public class ValidationMusicBand {
     }
 
     public Date validateEstablishmentDate(Date establishmentDate) throws IncorrectDataEntryExceptions {
-        if (establishmentDate.before(new Date())) {
+        if (establishmentDate == null || establishmentDate.before(new Date())) {
             return establishmentDate;
         }
         throw new IncorrectDataEntryExceptions("Укажите дату, меньше текущей");
@@ -190,7 +188,9 @@ public class ValidationMusicBand {
 
     public void checkCommand(String line) throws UnexpectedCommandExceptions {
         if (commandsName.contains(line.split(" ")[0])) {
-            throw new UnexpectedCommandExceptions("Использовалось зарезервированное слово");
+            throw new UnexpectedCommandExceptions(
+                    "Использовалось зарезервированное слово. Выполнение команды прекратилось"
+            );
         }
     }
 }

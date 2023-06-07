@@ -22,7 +22,7 @@ public class WriteXml {
     private XMLStreamWriter xmlWriter;
 
     static {
-        FILE_NAME = new ReadProperties().read(FILE_NAME_PROPERTIES);
+        FILE_NAME = ReadProperties.read(FILE_NAME_PROPERTIES);
     }
 
     public void writeFile(Printer printer) throws XMLStreamException {

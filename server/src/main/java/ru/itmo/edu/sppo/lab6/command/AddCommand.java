@@ -1,14 +1,21 @@
 package ru.itmo.edu.sppo.lab6.command;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.itmo.edu.sppo.lab6.database.repository.jdbc.JdbcGenreRepository;
+import ru.itmo.edu.sppo.lab6.database.repository.jdbc.JdbcMusicBandRepository;
+import ru.itmo.edu.sppo.lab6.database.repository.jdbc.JdbcUsersRepository;
+import ru.itmo.edu.sppo.lab6.database.service.jdbc.JdbcMusicBandService;
+import ru.itmo.edu.sppo.lab6.database.service.service.MusicBandService;
 import ru.itmo.edu.sppo.lab6.dto.ClientRequest;
 import ru.itmo.edu.sppo.lab6.dto.ClientResponse;
+import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicBand;
 import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 import ru.itmo.edu.sppo.lab6.storage.GetServerCommands;
 import ru.itmo.edu.sppo.lab6.storage.MusicBandCollection;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.utils.Printer;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 @Slf4j
@@ -16,6 +23,9 @@ public class AddCommand implements BaseCommand {
     private static final String SUCCESS_ADD = "Элемент успешно добавился в коллекцию";
     private static final boolean TRANSMIT_OBJECT = true;
     private static final String NAME = "add";
+    private static final MusicBandService MUSIC_BAND_SERVICE = new JdbcMusicBandService(
+            new JdbcUsersRepository(), new JdbcMusicBandRepository(), new JdbcGenreRepository()
+    );
 
     @Override
     public String getCommandName() {
@@ -38,7 +48,14 @@ public class AddCommand implements BaseCommand {
     public ClientResponse execute(ClientRequest request, Printer printer) throws IncorrectDataEntryExceptions,
             UnexpectedCommandExceptions {
         checkArgs(request.getArgument());
-        MusicBandCollection.add(request.getMusicBand());
+        MusicBand musicBand = request.getMusicBand();
+        MusicBandCollection.VALIDATION_MUSIC_BAND.checkMusicBand(musicBand);
+        try {
+            MusicBand musicBandFromDB = MUSIC_BAND_SERVICE.add(musicBand);
+            MusicBandCollection.add(musicBandFromDB);
+        } catch (SQLException e) {
+                throw new IncorrectDataEntryExceptions(e.getMessage());
+        }
 
         log.info(MusicBandCollection.getMusicBandCollection().toString());
         printer.println(SUCCESS_ADD);

@@ -21,9 +21,7 @@ public class GetClientDTO {
     private final SocketChannel socketChannel;
 
     static {
-        BUFFER_SIZE = Integer.parseInt(
-                new ReadProperties().read(BUFFER_SIZE_PROPERTIES)
-        );
+        BUFFER_SIZE = Integer.parseInt(ReadProperties.read(BUFFER_SIZE_PROPERTIES));
     }
 
     public GetClientDTO(SocketChannel socketChannel) {
