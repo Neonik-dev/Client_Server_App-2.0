@@ -13,6 +13,7 @@ import ru.itmo.edu.sppo.lab6.storage.GetServerCommands;
 import ru.itmo.edu.sppo.lab6.storage.HistoryStorage;
 import ru.itmo.edu.sppo.lab6.utils.Printer;
 
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,14 +38,14 @@ public class InputHandler {
         } catch (AuthorizationException e) {
             printer.println(e.getMessage());
             exception = e.getClass().getSimpleName();
-        } catch (IncorrectDataEntryExceptions | UnexpectedCommandExceptions e) {
+        } catch (IncorrectDataEntryExceptions | UnexpectedCommandExceptions | SQLException e) {
             printer.println(e.getMessage());
         }
         return new ClientResponse(printer.toString(), exception);
     }
 
     private static Object choiceCommand(ClientRequest request, Printer printer) throws UnexpectedCommandExceptions,
-            IncorrectDataEntryExceptions {
+            IncorrectDataEntryExceptions, SQLException {
         BaseCommand command = COMMANDS.get(request.getCommandName());
         if (request.getCommandName().equals(GET_ALL_COMMANDS)) {
             return GetServerCommands.getDetails();

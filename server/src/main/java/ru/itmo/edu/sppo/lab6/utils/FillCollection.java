@@ -2,7 +2,6 @@ package ru.itmo.edu.sppo.lab6.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.itmo.edu.sppo.lab6.database.repository.jdbc.JdbcMusicBandRepository;
-import ru.itmo.edu.sppo.lab6.database.repository.jdbc.JdbcUsersRepository;
 import ru.itmo.edu.sppo.lab6.database.service.jdbc.JdbcMusicBandService;
 import ru.itmo.edu.sppo.lab6.database.service.service.MusicBandService;
 import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicBand;
@@ -13,9 +12,7 @@ import java.util.ArrayList;
 
 @Slf4j
 public class FillCollection {
-    private static final MusicBandService MUSIC_BAND_SERVICE = new JdbcMusicBandService(
-            new JdbcUsersRepository(), new JdbcMusicBandRepository()
-    );
+    private static final MusicBandService MUSIC_BAND_SERVICE = new JdbcMusicBandService(new JdbcMusicBandRepository());
 
     private FillCollection() {
     }

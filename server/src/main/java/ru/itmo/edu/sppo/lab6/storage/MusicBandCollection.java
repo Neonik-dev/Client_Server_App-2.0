@@ -44,6 +44,7 @@ public class MusicBandCollection {
 
     public static void add(MusicBand musicBand) {
         MUSIC_BAND_COLLECTION.add(musicBand);
+        ALL_ID.add(musicBand.getId());
     }
 
     public static void addFromServerFile(MusicBand musicBand) throws IncorrectDataEntryInFileExceptions {
@@ -93,17 +94,6 @@ public class MusicBandCollection {
     public static void delete(int id) {
         getAndDeleteMusicBandById(id);
         ALL_ID.remove(id);
-    }
-
-    public static void delete(Printer printer) {
-        if (MUSIC_BAND_COLLECTION.isEmpty()) {
-            printer.println("Коллекция пустая, удалять нечего.");
-        } else {
-            int id = Collections.min(ALL_ID);
-            MusicBand musicBand = getAndDeleteMusicBandById(id);
-            printer.println(musicBand.toString());
-            ALL_ID.remove(id);
-        }
     }
 
     public static void getUniqueNumberOfParticipants(Printer printer) {

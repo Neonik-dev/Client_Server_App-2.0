@@ -14,7 +14,7 @@ public class ExitCommand implements BaseCommand {
 
     @Override
     public String getCommandDescription() {
-        return NAME + " -> завершает программу (без сохранения в файл)";
+        return NAME + " -> завершает программу";
     }
 
     @Override

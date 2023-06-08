@@ -7,6 +7,7 @@ import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
 import ru.itmo.edu.sppo.lab6.storage.GetServerCommands;
 import ru.itmo.edu.sppo.lab6.utils.Printer;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public interface BaseCommand {
@@ -21,7 +22,7 @@ public interface BaseCommand {
     }
 
     ClientResponse execute(ClientRequest request, Printer printer)
-            throws IncorrectDataEntryExceptions, UnexpectedCommandExceptions;
+            throws IncorrectDataEntryExceptions, UnexpectedCommandExceptions, SQLException;
 
     default void checkArgs(String[] args) throws IncorrectDataEntryExceptions {
         if (args.length != 0) {

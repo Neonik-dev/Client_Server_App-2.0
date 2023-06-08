@@ -12,6 +12,7 @@ public class SendToServer implements AutoCloseable {
 
     public void send(Object request, Socket clientSocket) throws IOException {
         log.debug("Клиент отправляет сообщение на сервер");
+        System.out.println(request);
         output = new ObjectOutputStream(clientSocket.getOutputStream());
         output.writeObject(request);
     }
