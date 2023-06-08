@@ -12,4 +12,5 @@
     <include file="scripts/sql/2023-06-07_6_fill_in_genre_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/sql/2023-06-07_7_alter_music_band_fix_date.sql" relativeToChangelogFile="true"/>
     <include file="scripts/sql/2023-06-08_8_delete_default_in_establishment_date_in_music_band.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-08_9_add_column_user_id_in_music_band.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
