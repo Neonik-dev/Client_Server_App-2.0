@@ -1,6 +1,6 @@
 package ru.itmo.edu.sppo.lab6;
 
-import ru.itmo.edu.sppo.lab6.document.FillCollection;
+import ru.itmo.edu.sppo.lab6.utils.FillCollection;
 import ru.itmo.edu.sppo.lab6.database.RunMigrations;
 import ru.itmo.edu.sppo.lab6.server.Server;
 

@@ -12,22 +12,22 @@ import java.util.Optional;
 
 public class JdbcMusicBandRepository implements MusicBandRepository {
     private static final String INSERT_QUERY = """
-            INSERT INTO music_band(name, coordinate_x, coordinate_y, number_of_participants, description, 
+            INSERT INTO music_band(name, coordinate_x, coordinate_y, number_of_participants, description,
             establishment_date, genre_id, studio_address)
             VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM genre WHERE name=?), ?)
             """;
     private static final String SELECT_BY_ID_QUERY = """
-            SELECT music_band.id, music_band.name, coordinate_x, coordinate_y, creation_date, number_of_participants, 
-            description, establishment_date, genre.name as genre, studio_address 
-            FROM music_band 
-                JOIN genre ON genre_id = genre.id 
+            SELECT music_band.id, music_band.name, coordinate_x, coordinate_y, creation_date, number_of_participants,
+            description, establishment_date, genre.name as genre, studio_address
+            FROM music_band
+                JOIN genre ON genre_id = genre.id
             WHERE music_band.id=?
             """;
     private static final String SELECT_ALL_QUERY = """
-            SELECT music_band.id, music_band.name, coordinate_x, coordinate_y, creation_date, number_of_participants, 
-            description, establishment_date, genre.name as genre, studio_address 
-            FROM music_band 
-                JOIN genre ON genre_id = genre.id 
+            SELECT music_band.id, music_band.name, coordinate_x, coordinate_y, creation_date, number_of_participants,
+            description, establishment_date, genre.name as genre, studio_address
+            FROM music_band
+                JOIN genre ON genre_id = genre.id
             """;
 
     @Override

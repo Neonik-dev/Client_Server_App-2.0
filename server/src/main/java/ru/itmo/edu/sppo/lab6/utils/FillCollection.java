@@ -1,4 +1,4 @@
-package ru.itmo.edu.sppo.lab6.document;
+package ru.itmo.edu.sppo.lab6.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.itmo.edu.sppo.lab6.database.repository.jdbc.JdbcMusicBandRepository;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 @Slf4j
 public class FillCollection {
-    private static final MusicBandService musicBandService = new JdbcMusicBandService(
+    private static final MusicBandService MUSIC_BAND_SERVICE = new JdbcMusicBandService(
             new JdbcUsersRepository(), new JdbcMusicBandRepository()
     );
 
@@ -23,7 +23,7 @@ public class FillCollection {
     public static void fillFromDB() {
         ArrayList<MusicBand> allMusicBand;
         try {
-            allMusicBand = musicBandService.getAll();
+            allMusicBand = MUSIC_BAND_SERVICE.getAll();
             log.debug("Вся коллекция успешно получена из базы данных");
         } catch (SQLException e) {
             log.error(
