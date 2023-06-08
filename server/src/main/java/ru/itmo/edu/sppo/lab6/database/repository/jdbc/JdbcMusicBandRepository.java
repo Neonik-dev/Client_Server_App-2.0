@@ -1,6 +1,5 @@
 package ru.itmo.edu.sppo.lab6.database.repository.jdbc;
 
-import ru.itmo.edu.sppo.lab6.database.repository.repository.GenreRepository;
 import ru.itmo.edu.sppo.lab6.database.repository.repository.MusicBandRepository;
 import ru.itmo.edu.sppo.lab6.dto.collectionItem.Coordinates;
 import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicBand;
@@ -8,25 +7,33 @@ import ru.itmo.edu.sppo.lab6.dto.collectionItem.MusicGenre;
 import ru.itmo.edu.sppo.lab6.dto.collectionItem.Studio;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class JdbcMusicBandRepository implements MusicBandRepository {
-    private static final String INSERT_QUERY = "INSERT INTO music_band(name, coordinate_x, coordinate_y, "
-            + "number_of_participants, description, establishment_date, genre_id, studio_address) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String SELECT_BY_ID_QUERY = "SELECT id, name, coordinate_x, coordinate_y, "
-            + "creation_date,  number_of_participants, description, establishment_date, genre_id, studio_address "
-            + "FROM music_band WHERE id=?";
-    private final GenreRepository genreRepository;
-
-    public JdbcMusicBandRepository(GenreRepository genreRepository) {
-        this.genreRepository = genreRepository;
-    }
+    private static final String INSERT_QUERY = """
+            INSERT INTO music_band(name, coordinate_x, coordinate_y, number_of_participants, description, 
+            establishment_date, genre_id, studio_address)
+            VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM genre WHERE name=?), ?)
+            """;
+    private static final String SELECT_BY_ID_QUERY = """
+            SELECT music_band.id, music_band.name, coordinate_x, coordinate_y, creation_date, number_of_participants, 
+            description, establishment_date, genre.name as genre, studio_address 
+            FROM music_band 
+                JOIN genre ON genre_id = genre.id 
+            WHERE music_band.id=?
+            """;
+    private static final String SELECT_ALL_QUERY = """
+            SELECT music_band.id, music_band.name, coordinate_x, coordinate_y, creation_date, number_of_participants, 
+            description, establishment_date, genre.name as genre, studio_address 
+            FROM music_band 
+                JOIN genre ON genre_id = genre.id 
+            """;
 
     @Override
-    public int add(Connection conn, MusicBand musicBand, int genreId) throws SQLException {
+    public int add(Connection conn, MusicBand musicBand) throws SQLException {
         try (var statement = conn.prepareStatement(INSERT_QUERY, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            convertMusicBandToDB(statement, musicBand, genreId);
+            convertMusicBandToDB(statement, musicBand);
             statement.execute();
 
             ResultSet resultSet = statement.getGeneratedKeys();
@@ -35,7 +42,7 @@ public class JdbcMusicBandRepository implements MusicBandRepository {
         }
     }
 
-    private void convertMusicBandToDB(PreparedStatement statement, MusicBand musicBand, int genreId)
+    private void convertMusicBandToDB(PreparedStatement statement, MusicBand musicBand)
             throws SQLException {
         statement.setString(1, musicBand.getName());
         statement.setDouble(2, musicBand.getCoordinates().x());
@@ -47,7 +54,7 @@ public class JdbcMusicBandRepository implements MusicBandRepository {
         } else {
             statement.setObject(6, null);
         }
-        statement.setInt(7, genreId);
+        statement.setString(7, musicBand.getGenre().name());
         Optional<String> address = musicBand.getStudio().getAddress();
         if (address.isPresent()) {
             statement.setString(8, address.get());
@@ -65,11 +72,11 @@ public class JdbcMusicBandRepository implements MusicBandRepository {
                 throw new SQLException("Нет ни одной MusicBand с таким id");
             }
 
-            return convertResultSetToMusicBand(conn, result);
+            return convertResultSetToMusicBand(result);
         }
     }
 
-    private MusicBand convertResultSetToMusicBand(Connection conn, ResultSet result) throws SQLException {
+    private MusicBand convertResultSetToMusicBand(ResultSet result) throws SQLException {
         MusicBand musicBand = new MusicBand();
         musicBand.setId(result.getInt("id"));
         musicBand.setName(result.getString("name"));
@@ -84,11 +91,21 @@ public class JdbcMusicBandRepository implements MusicBandRepository {
         musicBand.setDescription(result.getString("description"));
         musicBand.setEstablishmentDate(result.getDate("establishment_date"));
         musicBand.setGenre(
-                MusicGenre.valueOf(
-                        genreRepository.getNameById(conn, result.getInt("genre_id"))
-                )
+                MusicGenre.valueOf(result.getString("genre"))
         );
         musicBand.setStudio(new Studio(result.getString("studio_address")));
         return musicBand;
+    }
+
+    @Override
+    public ArrayList<MusicBand> getAll(Connection conn) throws SQLException {
+        ArrayList<MusicBand> allMusicBand = new ArrayList<>();
+        try (Statement statement = conn.createStatement()) {
+            ResultSet result = statement.executeQuery(SELECT_ALL_QUERY);
+            while (result.next()) {
+                allMusicBand.add(convertResultSetToMusicBand(result));
+            }
+        }
+        return allMusicBand;
     }
 }

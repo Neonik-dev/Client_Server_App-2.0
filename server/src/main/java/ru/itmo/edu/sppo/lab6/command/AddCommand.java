@@ -1,7 +1,6 @@
 package ru.itmo.edu.sppo.lab6.command;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.itmo.edu.sppo.lab6.database.repository.jdbc.JdbcGenreRepository;
 import ru.itmo.edu.sppo.lab6.database.repository.jdbc.JdbcMusicBandRepository;
 import ru.itmo.edu.sppo.lab6.database.repository.jdbc.JdbcUsersRepository;
 import ru.itmo.edu.sppo.lab6.database.service.jdbc.JdbcMusicBandService;
@@ -24,7 +23,7 @@ public class AddCommand implements BaseCommand {
     private static final boolean TRANSMIT_OBJECT = true;
     private static final String NAME = "add";
     private static final MusicBandService MUSIC_BAND_SERVICE = new JdbcMusicBandService(
-            new JdbcUsersRepository(), new JdbcMusicBandRepository(new JdbcGenreRepository()), new JdbcGenreRepository()
+            new JdbcUsersRepository(), new JdbcMusicBandRepository()
     );
 
     @Override
