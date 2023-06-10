@@ -4,8 +4,8 @@ import ru.itmo.edu.sppo.lab6.utils.FillCollection;
 import ru.itmo.edu.sppo.lab6.database.RunMigrations;
 import ru.itmo.edu.sppo.lab6.server.Server;
 
-public class Main {
-    private Main() {
+public class ServerApplication {
+    private ServerApplication() {
     }
 
     public static void main(String[] args) {

@@ -67,7 +67,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>ru.itmo.edu.sppo.lab6.Main</mainClass>
+                            <mainClass>ru.itmo.edu.sppo.lab6.ServerApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
