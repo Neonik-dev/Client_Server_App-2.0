@@ -68,10 +68,10 @@ public class MusicBandCollection {
         return ALL_ID.contains(id);
     }
 
-    public static void updateItem(MusicBand musicBandNew, int id) throws UnexpectedCommandExceptions,
+    public static void updateItem(MusicBand musicBandNew) throws UnexpectedCommandExceptions,
             IncorrectDataEntryExceptions {
         VALIDATION_MUSIC_BAND.checkMusicBand(musicBandNew);
-        MusicBand musicBandFromCollection = getAndDeleteMusicBandById(id);
+        MusicBand musicBandFromCollection = getAndDeleteMusicBandById(musicBandNew.getId());
         MUSIC_BAND_COLLECTION.add(mergeMusicBands(musicBandFromCollection, musicBandNew));
     }
 
@@ -94,6 +94,11 @@ public class MusicBandCollection {
     public static void delete(int id) {
         getAndDeleteMusicBandById(id);
         ALL_ID.remove(id);
+    }
+
+    public static void delete(ArrayList<Integer> arrIds) {
+        MUSIC_BAND_COLLECTION.removeIf(musicBand -> arrIds.contains(musicBand.getId()));
+        arrIds.forEach(ALL_ID::remove);
     }
 
     public static void getUniqueNumberOfParticipants(Printer printer) {

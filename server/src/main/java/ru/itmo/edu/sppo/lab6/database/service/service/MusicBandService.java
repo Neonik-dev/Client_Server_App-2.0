@@ -14,4 +14,10 @@ public interface MusicBandService {
     int deleteByIdAndUserId(int musicBandId, int userId) throws SQLException;
 
     MusicBand deleteAndReturnHeadByUserId(int userId) throws SQLException, IncorrectDataEntryExceptions;
+
+    MusicBand getMusicBandByUserIdAndId(int userId, int musicBandId) throws SQLException;
+
+    ArrayList<Integer> deleteByUserId(int userId) throws SQLException;
+
+    void updateByUserId(MusicBand musicBand, int userId) throws SQLException;
 }

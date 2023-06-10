@@ -52,4 +52,25 @@ public class JdbcMusicBandService implements MusicBandService {
             return musicBand;
         }
     }
+
+    @Override
+    public ArrayList<Integer> deleteByUserId(int userId) throws SQLException {
+        try (Connection conn = DataSource.getConnection()) {
+            return musicBandRepository.deleteByUserId(conn, userId);
+        }
+    }
+
+    @Override
+    public MusicBand getMusicBandByUserIdAndId(int userId, int musicBandId) throws SQLException {
+        try (Connection conn = DataSource.getConnection()) {
+            return musicBandRepository.getMusicBandByUserIdAndId(conn, userId, musicBandId);
+        }
+    }
+
+    @Override
+    public void updateByUserId(MusicBand musicBand, int userId) throws SQLException {
+        try (Connection conn = DataSource.getConnection()) {
+            musicBandRepository.updateByUserId(conn, musicBand, userId);
+        }
+    }
 }

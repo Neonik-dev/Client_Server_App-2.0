@@ -14,6 +14,11 @@ public class JdbcMusicBandRepository implements MusicBandRepository {
                 establishment_date, genre_id, studio_address, user_id)
             VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM genre WHERE name=?), ?, ?)
             """;
+    private static final String UPDATE_QUERY = """
+            UPDATE music_band SET name=?, coordinate_x=?, coordinate_y=?, number_of_participants=?, description=?,
+                establishment_date=?, genre_id=(SELECT id FROM genre WHERE name=?), studio_address=?, user_id=?
+            WHERE id=? AND user_id=?
+            """;
     private static final String SELECT_BY_ID_QUERY = """
             SELECT music_band.id, music_band.name, coordinate_x, coordinate_y, creation_date, number_of_participants,
                 description, establishment_date, genre.name as genre, studio_address
@@ -27,7 +32,6 @@ public class JdbcMusicBandRepository implements MusicBandRepository {
             FROM music_band
                 JOIN genre ON genre_id = genre.id
             """;
-    private static final String DELETE_BY_ID_AND_USER_ID_QUERY = "DELETE FROM music_band WHERE id=? AND user_id=?";
     private static final String SELECT_HEAD_BY_USER_ID_QUERY = """
             SELECT music_band.id, music_band.name, coordinate_x, coordinate_y, creation_date, number_of_participants,
                 description, establishment_date, genre.name as genre, studio_address
@@ -38,6 +42,15 @@ public class JdbcMusicBandRepository implements MusicBandRepository {
                 WHERE user_id=?
                 ORDER BY id ASC LIMIT 1
             )""";
+    private static final String SELECT_BY_USER_ID_AND_ID_QUERY = """
+            SELECT music_band.id, music_band.name, coordinate_x, coordinate_y, creation_date, number_of_participants,
+                description, establishment_date, genre.name as genre, studio_address
+            FROM music_band
+                JOIN genre ON genre_id = genre.id
+            WHERE music_band.user_id=? AND music_band.id=?
+            """;
+    private static final String DELETE_BY_ID_AND_USER_ID_QUERY = "DELETE FROM music_band WHERE id=? AND user_id=?";
+    private static final String DELETE_BY_USER_ID_QUERY = "DELETE FROM music_band WHERE user_id=?";
 
     @Override
     public int add(Connection conn, MusicBand musicBand, int userId) throws SQLException {
@@ -95,6 +108,44 @@ public class JdbcMusicBandRepository implements MusicBandRepository {
                 return ConvertorMusicBand.convertFromDB(result);
             }
             throw new IncorrectDataEntryExceptions("Вы еще не создали ни одну запись, поэтому нечего удалять");
+        }
+    }
+
+    @Override
+    public ArrayList<Integer> deleteByUserId(Connection conn, int userId) throws SQLException {
+        ArrayList<Integer> arrMusicBandId = new ArrayList<>();
+        try (var statement = conn.prepareStatement(DELETE_BY_USER_ID_QUERY, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, userId);
+            statement.executeUpdate();
+
+            ResultSet result = statement.getGeneratedKeys();
+            while (result.next()) {
+                arrMusicBandId.add(result.getInt(1));
+            }
+        }
+        return arrMusicBandId;
+    }
+
+    @Override
+    public MusicBand getMusicBandByUserIdAndId(Connection conn, int userId, int musicBandId) throws SQLException {
+        try (PreparedStatement statement = conn.prepareStatement(SELECT_BY_USER_ID_AND_ID_QUERY)) {
+            statement.setInt(1, userId);
+            statement.setInt(2, musicBandId);
+            statement.executeQuery();
+
+            ResultSet result = statement.getResultSet();
+            result.next();
+            return ConvertorMusicBand.convertFromDB(result);
+        }
+    }
+
+    @Override
+    public void updateByUserId(Connection conn, MusicBand musicBandId, int userId) throws SQLException {
+        try (PreparedStatement statement = conn.prepareStatement(UPDATE_QUERY)) {
+            ConvertorMusicBand.convertToDB(statement, musicBandId, userId);
+            statement.setInt(10, musicBandId.getId());
+            statement.setInt(11, userId);
+            statement.executeUpdate();
         }
     }
 }
