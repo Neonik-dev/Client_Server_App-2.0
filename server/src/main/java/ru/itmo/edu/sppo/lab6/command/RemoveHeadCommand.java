@@ -15,6 +15,8 @@ import java.sql.SQLException;
 
 public class RemoveHeadCommand implements BaseCommand {
     private static final String NAME = "remove_head";
+    private static final MusicBandService MUSIC_BAND_SERVICE = SingletonJdbcServices.getMUSIC_BAND_SERVICE();
+    private static final UserSessionService USER_SESSION_SERVICE = SingletonJdbcServices.getUSER_SESSION_SERVICE();
 
     @Override
     public String getCommandName() {
@@ -25,9 +27,6 @@ public class RemoveHeadCommand implements BaseCommand {
     public String getCommandDescription() {
         return NAME + " -> выводит и удаляет первый элемент коллекции";
     }
-
-    private static final MusicBandService MUSIC_BAND_SERVICE = SingletonJdbcServices.getMUSIC_BAND_SERVICE();
-    private static final UserSessionService USER_SESSION_SERVICE = SingletonJdbcServices.getUSER_SESSION_SERVICE();
 
     @Override
     public ClientResponse execute(ClientRequest request, Printer printer) throws IncorrectDataEntryExceptions,
