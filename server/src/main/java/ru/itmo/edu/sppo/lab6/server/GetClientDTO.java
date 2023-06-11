@@ -60,16 +60,19 @@ public class GetClientDTO {
 
     private void readTcpPackage(ByteArrayOutputStream outputStream) throws IOException {
         ByteBuffer bufferResponse = ByteBuffer.allocate(BUFFER_SIZE);
+        byte[] lastChunk = null;
 
         while (socketChannel.read(bufferResponse) > 0) {
-            outputStream.write(
-                    clearByteArray(bufferResponse.array())
-            );
+            if (lastChunk != null) {
+                outputStream.write(lastChunk);
+            }
+            lastChunk = bufferResponse.array();
             bufferResponse = ByteBuffer.allocate(BUFFER_SIZE);
         }
+        outputStream.write(clearEOFByteArray(lastChunk));
     }
 
-    private byte[] clearByteArray(byte[] array) {
+    private byte[] clearEOFByteArray(byte[] array) {
         int cursor = array.length - 1;
         while (cursor >= 0 && array[cursor] == 0) {
             cursor--;

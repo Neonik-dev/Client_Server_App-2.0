@@ -26,6 +26,8 @@ public class InputHandler {
     private static String session;
     private static final String CLOSE_TEXT = "Сканнер закрылся. Завершение работы";
     private static final String GREETING = "Добро пожаловать!\nМожете выполнить команду -> help, и узнаете все команды";
+    private static final String NOT_AUTHORIZED = "Пользователь не авторизован. Команды сервера не доступны."
+            + " Чтобы увидеть клиентские команды напишите команду -> help";
     private static final String HELP_TEXT =
             "Напишите любую команду из списка. Чтобы посмотреть список команд воспользуйтесь командой -> help";
     private static final ValidationMusicBand VALIDATION_MUSIC_BAND;
@@ -65,10 +67,12 @@ public class InputHandler {
 
                 if (CLIENT_COMMAND.containsKey(commandName)) {
                     CLIENT_COMMAND.get(commandName).execute(args);
-                } else {
+                } else if (getSession() != null && !getSession().isEmpty()) {
                     ClientResponse response = (ClientResponse) new InteractionWithServer()
                             .interaction(createBodyRequest(commandName, args));
                     System.out.print(response.answer());
+                } else {
+                    throw new AuthorizationException(NOT_AUTHORIZED);
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
                 System.out.println(HELP_TEXT);

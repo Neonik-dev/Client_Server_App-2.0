@@ -9,6 +9,7 @@ import ru.itmo.edu.sppo.lab6.utils.CheckSession;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +29,7 @@ public class HelpCommand implements BaseCommand {
 
     @Override
     public String getCommandDescription() {
-        return null;
+        return NAME + " -> выводит справку по всем доступным командам";
     }
 
     @Override
@@ -38,12 +39,14 @@ public class HelpCommand implements BaseCommand {
             getCommands();
             ClientResponse response = (ClientResponse) new InteractionWithServer()
                     .interaction(InputHandler.createBodyRequest(NAME, args));
-            System.out.print(response.answer());
 
+            Consumer<String> lambdaForEach = key -> System.out.println(commands.get(key).getCommandDescription());
             if (CheckSession.isGoodSession(response.exception())) {
                 commands.keySet().stream()
                         .filter(key -> !EXCLUDE_COMMANDS.contains(key))
-                        .forEach(key -> System.out.println(commands.get(key).getCommandDescription()));
+                        .forEach(lambdaForEach);
+            } else {
+                commands.keySet().forEach(lambdaForEach);
             }
         } catch (UnexpectedCommandExceptions e) {
             throw new RuntimeException();

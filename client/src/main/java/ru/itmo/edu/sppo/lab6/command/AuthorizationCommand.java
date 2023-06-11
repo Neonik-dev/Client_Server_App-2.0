@@ -18,7 +18,7 @@ public class AuthorizationCommand implements BaseCommand {
 
     @Override
     public String getCommandDescription() {
-        return NAME + "login password -> авторизует пользователя";
+        return NAME + " login password -> вход в аккаунт";
     }
 
     @Override
