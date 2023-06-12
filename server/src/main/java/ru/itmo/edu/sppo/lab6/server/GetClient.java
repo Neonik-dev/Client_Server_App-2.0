@@ -15,14 +15,14 @@ import java.util.Arrays;
 
 @Slf4j
 public class GetClient extends Thread {
-    private static final String name = "GetClientThread";
+    private static final String NAME = "GetClientThread";
     private static final int COUNT_RETRIES = 10;
     private static final int BUFFER_SIZE = Integer.parseInt(ReadProperties.read("bufferSize"));
     private final SocketChannel socketChannel;
     private volatile ClientRequest response;
 
     public GetClient(SocketChannel socketChannel) {
-        super(name);
+        super(NAME);
         this.socketChannel = socketChannel;
     }
 
