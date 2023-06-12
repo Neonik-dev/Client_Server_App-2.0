@@ -20,7 +20,7 @@ import java.util.*;
 public class InputHandler {
     @Getter
     @Setter
-    private static Scanner scanner;
+    private static Scanner scanner = new Scanner(System.in);
     @Getter
     @Setter
     private static String session;
@@ -37,7 +37,6 @@ public class InputHandler {
     static {
         SERVER_COMMANDS = GetAllServerCommands.getCommands();
         VALIDATION_MUSIC_BAND = new ValidationMusicBand(SERVER_COMMANDS.keySet());
-        setScanner(new Scanner(System.in));
     }
 
     public void startInputHandler() {

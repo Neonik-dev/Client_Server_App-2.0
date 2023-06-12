@@ -9,6 +9,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -43,11 +44,23 @@ public class AcceptConnection {
                 client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
             } else if (selectionKey.isValid() && selectionKey.isReadable() && selectionKey.isWritable()) {
                 socketChannel = (SocketChannel) selectionKey.channel();
-
-                ClientRequest request = new GetClientDTO(socketChannel).getDTO();
-                senderThread = new SendClient(socketChannel, InputHandler.executeCommand(request));
-                senderThread.start();
+                getAndSendClient();
             }
+        }
+    }
+
+    private void getAndSendClient() {
+        try {
+            GetClient getClientThread = new GetClient(socketChannel);
+            getClientThread.start();
+            getClientThread.join();
+            ClientRequest request = getClientThread.getResponse();
+
+            senderThread = new SendClient(socketChannel, InputHandler.executeCommand(request));
+            senderThread.start();
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+            log.error(Arrays.toString(e.getStackTrace()));
         }
     }
 

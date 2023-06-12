@@ -14,7 +14,6 @@ public class SendClient extends Thread {
     private final SocketChannel socketChannel;
     private final Object response;
 
-
     public SendClient(SocketChannel socketChannel, Object response) {
         super(NAME);
         this.socketChannel = socketChannel;
