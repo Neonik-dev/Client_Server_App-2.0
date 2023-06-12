@@ -6,6 +6,7 @@ import ru.itmo.edu.sppo.lab6.document.ReadProperties;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
+import java.util.Arrays;
 
 @Slf4j
 public class Server implements AutoCloseable {
@@ -28,7 +29,7 @@ public class Server implements AutoCloseable {
             new AcceptConnection(serverSocketChannel).acceptConnection();
         } catch (IOException e) {
             log.error(e.getMessage());
-            e.getStackTrace();
+            log.error(Arrays.toString(e.getStackTrace()));
             close();
         }
     }

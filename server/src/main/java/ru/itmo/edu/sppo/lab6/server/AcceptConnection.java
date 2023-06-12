@@ -10,45 +10,69 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.Optional;
 
 @Slf4j
 public class AcceptConnection {
     private final ServerSocketChannel serverSocketChannel;
+    private final Selector selector;
+    private Thread senderThread = null;
+    private SocketChannel socketChannel = null;
 
-    public AcceptConnection(ServerSocketChannel serverSocketChannel) {
+    public AcceptConnection(ServerSocketChannel serverSocketChannel) throws IOException {
         this.serverSocketChannel = serverSocketChannel;
+        this.selector = Selector.open();
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
     }
 
     public void acceptConnection() throws IOException {
-        Selector selector = Selector.open();
-        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        Optional<SelectionKey> optionalSelectionKey;
+        SelectionKey selectionKey;
 
         while (true) {
-            selector.selectNow();
-            Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
-            if (!iterator.hasNext()) {
+            optionalSelectionKey = waitingMessageFromClient();
+            if (optionalSelectionKey.isEmpty()) {
                 continue;
             }
+            selectionKey = optionalSelectionKey.get();
 
-            SelectionKey selectionKey = iterator.next();
-            iterator.remove();
-            if (selectionKey.isAcceptable() && selectionKey.isValid()) {
+            if (selectionKey.isValid() && selectionKey.isAcceptable()) {
                 log.debug("К серверу подключился клиент");
                 SocketChannel client = serverSocketChannel.accept();
                 client.configureBlocking(false);
                 client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-            }
+            } else if (selectionKey.isValid() && selectionKey.isReadable() && selectionKey.isWritable()) {
+                socketChannel = (SocketChannel) selectionKey.channel();
 
-            if (selectionKey.isReadable() && selectionKey.isWritable()) {
-                SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
                 ClientRequest request = new GetClientDTO(socketChannel).getDTO();
-
-                SendClientDTO.sendDTO(
-                        socketChannel,
-                        InputHandler.executeCommand(request)
-                );
-                socketChannel.close();
+                senderThread = new SendClient(socketChannel, InputHandler.executeCommand(request));
+                senderThread.start();
             }
+        }
+    }
+
+    private Optional<SelectionKey> waitingMessageFromClient() throws IOException {
+        selector.selectNow();
+        Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+        if (!iterator.hasNext()) {
+            return Optional.empty();
+        }
+        closeOldSocketChannel();
+
+        SelectionKey selectionKey = iterator.next();
+        iterator.remove();
+        return Optional.of(selectionKey);
+    }
+
+    private void closeOldSocketChannel() throws IOException {
+        if (senderThread != null && socketChannel.isConnected() && senderThread.isAlive()) {
+            try {
+                senderThread.join();
+            } catch (InterruptedException e) {
+                log.debug(senderThread.getName());
+            }
+        } else if (socketChannel != null && socketChannel.isConnected()) {
+            socketChannel.close();
         }
     }
 }
