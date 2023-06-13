@@ -1,4 +1,6 @@
-package ru.itmo.edu.sppo.lab6.command;
+package ru.itmo.edu.sppo.lab6.storage;
+
+import ru.itmo.edu.sppo.lab6.command.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +55,12 @@ public class Commands {
 
             BaseCommand printEstablishmentDateSortAscCommand = new PrintEstablishmentDateSortAscCommand();
             COMMANDS.put(printEstablishmentDateSortAscCommand.getCommandName(), printEstablishmentDateSortAscCommand);
+
+            BaseCommand registrationCommand = new RegistrationCommand();
+            COMMANDS.put(registrationCommand.getCommandName(), registrationCommand);
+
+            BaseCommand authorizationCommand = new AuthorizationCommand();
+            COMMANDS.put(authorizationCommand.getCommandName(), authorizationCommand);
         }
     }
 

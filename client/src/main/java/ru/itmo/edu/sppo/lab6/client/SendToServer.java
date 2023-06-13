@@ -7,16 +7,17 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 @Slf4j
-public class SendToServer {
+public class SendToServer implements AutoCloseable {
     private ObjectOutputStream output;
 
     public void send(Object request, Socket clientSocket) throws IOException {
         log.debug("Клиент отправляет сообщение на сервер");
+        System.out.println(request);
         output = new ObjectOutputStream(clientSocket.getOutputStream());
         output.writeObject(request);
     }
 
-    public void stopOutputConnection() throws IOException {
+    public void close() throws IOException {
         output.close();
     }
 }

@@ -6,17 +6,16 @@ import ru.itmo.edu.sppo.lab6.document.ReadProperties;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
+import java.util.Arrays;
 
 @Slf4j
-public class Server {
+public class Server implements AutoCloseable {
     private static final String PORT_PROPERTIES = "server.port";
     private ServerSocketChannel serverSocketChannel;
     private final int port;
 
     public Server() {
-        port = Integer.parseInt(
-                new ReadProperties().read(PORT_PROPERTIES)
-        );
+        port = Integer.parseInt(ReadProperties.read(PORT_PROPERTIES));
     }
 
     public void start() {
@@ -30,12 +29,13 @@ public class Server {
             new AcceptConnection(serverSocketChannel).acceptConnection();
         } catch (IOException e) {
             log.error(e.getMessage());
-            e.getStackTrace();
-            stop();
+            log.error(Arrays.toString(e.getStackTrace()));
+            close();
         }
     }
 
-    public void stop() {
+    @Override
+    public void close() {
         try {
             serverSocketChannel.close();
         } catch (IOException e) {

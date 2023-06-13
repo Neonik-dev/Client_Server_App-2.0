@@ -14,4 +14,5 @@ public class ClientRequest implements Serializable {
     private String commandName;
     private String[] argument;
     private MusicBand musicBand;
+    private String session;
 }

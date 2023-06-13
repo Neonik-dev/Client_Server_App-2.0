@@ -9,46 +9,92 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 public class AcceptConnection {
+    private static final int MAX_CORE = Runtime.getRuntime().availableProcessors();
     private final ServerSocketChannel serverSocketChannel;
+    private final Selector selector;
+    private final ExecutorService cachedPool;
+    private Thread senderThread = null;
+    private SocketChannel socketChannel = null;
 
-    public AcceptConnection(ServerSocketChannel serverSocketChannel) {
+    public AcceptConnection(ServerSocketChannel serverSocketChannel) throws IOException {
         this.serverSocketChannel = serverSocketChannel;
+        this.selector = Selector.open();
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        cachedPool = Executors.newFixedThreadPool(MAX_CORE);
     }
 
     public void acceptConnection() throws IOException {
-        Selector selector = Selector.open();
-        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        Optional<SelectionKey> optionalSelectionKey;
+        SelectionKey selectionKey;
 
         while (true) {
-            selector.selectNow();
-            Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
-            if (!iterator.hasNext()) {
+            optionalSelectionKey = waitingMessageFromClient();
+            if (optionalSelectionKey.isEmpty()) {
                 continue;
             }
+            selectionKey = optionalSelectionKey.get();
 
-            SelectionKey selectionKey = iterator.next();
-            iterator.remove();
-            if (selectionKey.isAcceptable() && selectionKey.isValid()) {
+            if (selectionKey.isValid() && selectionKey.isAcceptable()) {
                 log.debug("К серверу подключился клиент");
                 SocketChannel client = serverSocketChannel.accept();
                 client.configureBlocking(false);
                 client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+            } else if (selectionKey.isValid() && selectionKey.isReadable() && selectionKey.isWritable()) {
+                socketChannel = (SocketChannel) selectionKey.channel();
+                getAndSendClient();
             }
+        }
+    }
 
-            if (selectionKey.isReadable() && selectionKey.isWritable()) {
-                SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
-                ClientRequest request = new GetClientDTO(socketChannel).getDTO();
+    private void getAndSendClient() {
+        try {
+            GetClient getClientThread = new GetClient(socketChannel);
+            getClientThread.start();
+            getClientThread.join();
+            ClientRequest request = getClientThread.getResponse();
 
-                SendClientDTO.sendDTO(
-                        socketChannel,
-                        InputHandler.executeCommand(request)
-                );
-                socketChannel.close();
+            senderThread = new SendClient(
+                    socketChannel,
+                    cachedPool.submit(new InputHandler(request)).get()
+            );
+            senderThread.start();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error(e.getMessage());
+            log.error(Arrays.toString(e.getStackTrace()));
+        }
+    }
+
+    private Optional<SelectionKey> waitingMessageFromClient() throws IOException {
+        selector.selectNow();
+        Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+        if (!iterator.hasNext()) {
+            return Optional.empty();
+        }
+        closeOldSocketChannel();
+
+        SelectionKey selectionKey = iterator.next();
+        iterator.remove();
+        return Optional.of(selectionKey);
+    }
+
+    private void closeOldSocketChannel() throws IOException {
+        if (senderThread != null && socketChannel.isConnected() && senderThread.isAlive()) {
+            try {
+                senderThread.join();
+            } catch (InterruptedException e) {
+                log.debug(senderThread.getName());
             }
+        } else if (socketChannel != null && socketChannel.isConnected()) {
+            socketChannel.close();
         }
     }
 }

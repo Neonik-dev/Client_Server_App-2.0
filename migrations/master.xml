@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="scripts/sql/2023-06-05_1_create_users_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-05_2_create_genre_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-05_3_create_music_band_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-06_4_create_user_session_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-07_5_alter_users_set_password_length.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-07_6_fill_in_genre_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-07_7_alter_music_band_fix_date.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-08_8_delete_default_in_establishment_date_in_music_band.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/sql/2023-06-08_9_add_column_user_id_in_music_band.sql" relativeToChangelogFile="true"/>
+</databaseChangeLog>

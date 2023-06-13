@@ -1,7 +1,7 @@
 package ru.itmo.edu.sppo.lab6.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.itmo.edu.sppo.lab6.client.ConnectionToServer;
+import ru.itmo.edu.sppo.lab6.client.InteractionWithServer;
 import ru.itmo.edu.sppo.lab6.dto.ClientRequest;
 
 import java.util.Map;
@@ -21,8 +21,8 @@ public class GetAllServerCommands {
         ClientRequest clientRequest = ClientRequest.builder().commandName(GET_ALL_COMMANDS).build();
 
         do {
-            serverCommands = (Map<String, Map<String, Boolean>>) new ConnectionToServer()
-                    .interactionWithServer(clientRequest);
+            serverCommands = (Map<String, Map<String, Boolean>>) new InteractionWithServer()
+                    .interaction(clientRequest);
             if (serverCommands == null) {
                 waitStartServer();
             }
