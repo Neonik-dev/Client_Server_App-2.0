@@ -12,11 +12,16 @@ import java.nio.channels.SocketChannel;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 public class AcceptConnection {
+    private static final int MAX_CORE = Runtime.getRuntime().availableProcessors();
     private final ServerSocketChannel serverSocketChannel;
     private final Selector selector;
+    private final ExecutorService cachedPool;
     private Thread senderThread = null;
     private SocketChannel socketChannel = null;
 
@@ -24,6 +29,7 @@ public class AcceptConnection {
         this.serverSocketChannel = serverSocketChannel;
         this.selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        cachedPool = Executors.newFixedThreadPool(MAX_CORE);
     }
 
     public void acceptConnection() throws IOException {
@@ -56,9 +62,12 @@ public class AcceptConnection {
             getClientThread.join();
             ClientRequest request = getClientThread.getResponse();
 
-            senderThread = new SendClient(socketChannel, InputHandler.executeCommand(request));
+            senderThread = new SendClient(
+                    socketChannel,
+                    cachedPool.submit(new InputHandler(request)).get()
+            );
             senderThread.start();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | ExecutionException e) {
             log.error(e.getMessage());
             log.error(Arrays.toString(e.getStackTrace()));
         }

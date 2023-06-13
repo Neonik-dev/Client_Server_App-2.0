@@ -16,19 +16,23 @@ import ru.itmo.edu.sppo.lab6.utils.Printer;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
-public class InputHandler {
+public class InputHandler implements Callable<Object> {
     public static final String GET_ALL_COMMANDS = "getAllCommands";
     private static final String RECOMMENDATION_HELP_COMMAND =
             "Напишите любую команду из списка. Чтобы посмотреть список команд воспользуйтесь командой -> help";
     private static final Map<String, BaseCommand> COMMANDS = new Commands().getAllCommand();
     private static final Set<String> COMMANDS_WITHOUT_SESSION = CommandsWorkWithoutSession.getCommands();
     private static final BaseCommand SAVE_COMMAND = new SaveCommand();
+    private final ClientRequest request;
 
-    private InputHandler() {
+    public InputHandler(ClientRequest request) {
+        this.request = request;
     }
 
-    public static Object executeCommand(ClientRequest request) {
+    @Override
+    public Object call() {
         String exception = null;
         Printer printer = new Printer();
         try {
