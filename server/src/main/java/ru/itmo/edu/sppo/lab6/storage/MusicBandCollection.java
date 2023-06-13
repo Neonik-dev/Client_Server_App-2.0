@@ -16,7 +16,7 @@ public class MusicBandCollection {
     private static final HashSet<Integer> ALL_ID = new HashSet<>();
     private static final LinkedList<MusicBand> MUSIC_BAND_COLLECTION = new LinkedList<>();
     private static final Date DATE_CREATED = new Date();
-    private static final ReentrantLock locker = new ReentrantLock();
+    private static final ReentrantLock LOCKER = new ReentrantLock();
 
     static {
         VALIDATION_MUSIC_BAND = new ValidationMusicBand(new Commands().getAllCommand().keySet());
@@ -26,11 +26,11 @@ public class MusicBandCollection {
     }
 
     public static LinkedList<MusicBand> getMusicBandCollection() {
-        locker.lock();
+        LOCKER.lock();
         try {
             return (LinkedList<MusicBand>) MUSIC_BAND_COLLECTION.clone();
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
@@ -39,12 +39,12 @@ public class MusicBandCollection {
     }
 
     public static void clear() {
-        locker.lock();
+        LOCKER.lock();
         try {
             MUSIC_BAND_COLLECTION.clear();
             ALL_ID.clear();
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
@@ -55,28 +55,28 @@ public class MusicBandCollection {
     }
 
     public static void add(MusicBand musicBand) {
-        locker.lock();
+        LOCKER.lock();
         try {
             MUSIC_BAND_COLLECTION.add(musicBand);
             ALL_ID.add(musicBand.getId());
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
     public static void addFromServerFile(MusicBand musicBand) throws IncorrectDataEntryInFileExceptions {
-        locker.lock();
+        LOCKER.lock();
         try {
             checkDuplicateID(musicBand.getId());
             ALL_ID.add(musicBand.getId());
             MUSIC_BAND_COLLECTION.add(musicBand);
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
     public static void show(Printer printer) {
-        locker.lock();
+        LOCKER.lock();
         try {
             Collections.sort(MUSIC_BAND_COLLECTION);
             if (MUSIC_BAND_COLLECTION.isEmpty()) {
@@ -87,7 +87,7 @@ public class MusicBandCollection {
                 );
             }
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
@@ -97,29 +97,29 @@ public class MusicBandCollection {
 
     public static void updateItem(MusicBand musicBandNew) throws UnexpectedCommandExceptions,
             IncorrectDataEntryExceptions {
-        locker.lock();
+        LOCKER.lock();
         try {
             VALIDATION_MUSIC_BAND.checkMusicBand(musicBandNew);
             MusicBand musicBandFromCollection = getAndDeleteMusicBandById(musicBandNew.getId());
             MUSIC_BAND_COLLECTION.add(mergeMusicBands(musicBandFromCollection, musicBandNew));
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
     private static MusicBand mergeMusicBands(MusicBand musicBandFromCollection, MusicBand musicBandNew) {
-        locker.lock();
+        LOCKER.lock();
         try {
             musicBandNew.setId(musicBandFromCollection.getId());
             musicBandNew.setCreationDate(musicBandFromCollection.getCreationDate());
             return musicBandNew;
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
     private static MusicBand getAndDeleteMusicBandById(int id) {
-        locker.lock();
+        LOCKER.lock();
         try {
             for (MusicBand elem : MUSIC_BAND_COLLECTION) {
                 if (elem.getId() == id) {
@@ -129,32 +129,32 @@ public class MusicBandCollection {
             }
             return null;
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
     public static void delete(int id) {
-        locker.lock();
+        LOCKER.lock();
         try {
             getAndDeleteMusicBandById(id);
             ALL_ID.remove(id);
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
     public static void delete(ArrayList<Integer> arrIds) {
-        locker.lock();
+        LOCKER.lock();
         try {
             MUSIC_BAND_COLLECTION.removeIf(musicBand -> arrIds.contains(musicBand.getId()));
             arrIds.forEach(ALL_ID::remove);
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
     public static void getUniqueNumberOfParticipants(Printer printer) {
-        locker.lock();
+        LOCKER.lock();
         try {
             Set<Long> uniqueParticipants = MUSIC_BAND_COLLECTION.stream()
                     .filter(
@@ -164,12 +164,12 @@ public class MusicBandCollection {
                     ).collect(Collectors.toSet());
             printer.println(uniqueParticipants.toString());
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 
     public static long countNumberOfParticipants(long number) {
-        locker.lock();
+        LOCKER.lock();
         try {
             return MUSIC_BAND_COLLECTION.stream()
                     .filter(
@@ -177,7 +177,7 @@ public class MusicBandCollection {
                                     && musicBand.getSafeNumberOfParticipants().get() < number
                     ).count();
         } finally {
-            locker.unlock();
+            LOCKER.unlock();
         }
     }
 }
