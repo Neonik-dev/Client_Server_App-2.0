@@ -2,15 +2,12 @@ package ru.itmo.edu.sppo.lab6;
 
 import ru.itmo.edu.sppo.lab6.command.BaseCommand;
 import ru.itmo.edu.sppo.lab6.exceptions.AuthorizationException;
-import ru.itmo.edu.sppo.lab6.storage.Commands;
+import ru.itmo.edu.sppo.lab6.storage.*;
 import ru.itmo.edu.sppo.lab6.command.SaveCommand;
 import ru.itmo.edu.sppo.lab6.dto.ClientRequest;
 import ru.itmo.edu.sppo.lab6.dto.ClientResponse;
 import ru.itmo.edu.sppo.lab6.exceptions.IncorrectDataEntryExceptions;
 import ru.itmo.edu.sppo.lab6.exceptions.UnexpectedCommandExceptions;
-import ru.itmo.edu.sppo.lab6.storage.CommandsWorkWithoutSession;
-import ru.itmo.edu.sppo.lab6.storage.GetServerCommands;
-import ru.itmo.edu.sppo.lab6.storage.HistoryStorage;
 import ru.itmo.edu.sppo.lab6.utils.Printer;
 
 import java.sql.SQLException;
@@ -64,9 +61,10 @@ public class InputHandler implements Callable<Object> {
         }
     }
 
-    private static void checkSession(ClientRequest request) throws AuthorizationException {
+    private static void checkSession(ClientRequest request) throws AuthorizationException, SQLException {
         if (!COMMANDS_WITHOUT_SESSION.contains(request.getCommandName()) && request.getSession() == null) {
             throw new AuthorizationException("Пользователь не авторизован. Команды не доступны.");
         }
+        SingletonJdbcServices.getUSER_SESSION_SERVICE().getUserIdBySession(request.getSession());
     }
 }
